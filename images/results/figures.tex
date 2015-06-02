@@ -1,0 +1,166 @@
+%% Figure 1
+\begin{figure}[t]
+%%Figure1a
+\subfigure[][\tiny Voxel-based]{\label{fig:voxres}
+\hspace{0.8cm}
+\begin{tikzpicture} [scale=.45,every node/.style={scale=0.45}]  %[scale=.68]
+
+\def\labels{
+{\color{green}$V_{1}$}, 
+{\color{green}$V_{2}$}, 
+{\color{green}$V_{3}$},  
+{\color{green}$V_{4}$},
+{\color{green}$V_{5}$},
+{\color{green}$V_{6}$},
+{\color{green}$V_{7}$},
+{\color{green}$V_{8}$}
+ }
+
+\def\reward{85.1,77.6,76.0,78.8,75.8,80.4,82.6,84.3}
+\def\spec{46.7,60.7,76.8,63.4,76.8,77.8,78.2,81.7}
+\def\cZoom{2.5} 
+\def\percentageLabelAngle{10}
+\def\nbeams{8}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+
+\pgfmathsetmacro\globalRotation{\halfAngle}
+
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw(\cAngle:{\cZoom*1.00})  node[fill=white] {\n};
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*0.9}) ;
+
+}
+
+%% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/110}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/110*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{3}{3.5}\selectfont]{$\x\%$};
+}
+
+%% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/110}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/110}) } ;
+
+\def\auxx{{\spec}}
+\pgfmathsetmacro\origin{\auxx[\nbeams-1]} 
+\draw [red, thick] (\globalRotation:{\cZoom*\origin/110}) \foreach \n  [count=\ni] in \spec { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/110}) };
+
+
+\foreach \n [count=\ni] in \reward 
+{
+  \pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+  \pgfmathsetmacro\nreward{\aux[\ni-1]}
+  \pgfmathsetmacro\nspec{\auxx[\ni-1]}
+  \draw (\cAngle:{\cZoom*1.36}) node[align=center] {{\color{blue}\nreward $\%$ } \\{ \color{red}\nspec $\%$}};
+};
+
+%%%% draw the domain of each class 
+\def\puta{3/0/{Mono-parametric},
+  5/3/{Multi-parametric}}
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+
+   \pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+   \pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+   \pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+   \draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+   \draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;     
+   \pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+   {\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);} 
+    
+  }  
+\end{tikzpicture} 
+}\hfill
+%%Figure1b
+\subfigure[][\tiny 3D-texton-based]{\label{fig;texres}
+\begin{tikzpicture} [scale=.45,every node/.style={scale=0.45}]  %[scale=.68]
+
+\def\labels{
+{\color{green}$T_{1}$}, 
+{\color{green}$T_{2}$}, 
+{\color{green}$T_{3}$},  
+{\color{green}$T_{4}$},
+{\color{green}$T_{5}$},
+{\color{green}$T_{6}$},
+{\color{green}$T_{7}$},
+{\color{green}$T_{8}$}
+ }
+
+\def\reward{82.5,83.2,91.1,87.5,93.4,93.4,94.2,94.7}
+\def\spec{76.7,73.5,89.2,83.3,90.7,90.9,91.6,93.0}
+\def\cZoom{2.5} 
+\def\percentageLabelAngle{10}
+\def\nbeams{8}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+
+\pgfmathsetmacro\globalRotation{\halfAngle}
+
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw(\cAngle:{\cZoom*1.00})  node[fill=white] {\n};
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*0.9}) ;
+
+}
+
+% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/110}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/110*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{3}{3.5}\selectfont]{$\x\%$};
+}
+
+
+% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/110}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/110}) } ;
+
+
+\def\auxx{{\spec}}
+\pgfmathsetmacro\origin{\auxx[\nbeams-1]} 
+\draw [red, thick] (\globalRotation:{\cZoom*\origin/110}) \foreach \n  [count=\ni] in \spec { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/110}) };
+
+% label all the percentags
+\foreach \n [count=\ni] in \reward 
+{
+  \pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+  \pgfmathsetmacro\nreward{\aux[\ni-1]}
+  \pgfmathsetmacro\nspec{\auxx[\ni-1]}
+  \draw (\cAngle:{\cZoom*1.36}) node[align=center] {{\color{blue}\nreward $\%$ } \\{ \color{red}\nspec $\%$}};
+};
+
+%%% draw the domain of each class 
+\def\puta{3/0/{Mono-parametric},
+  5/3/{Multi-parametric}}
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+   \pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+   \pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+   \pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+   \draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+   \draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;     
+   \pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+   {\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);}     
+  }  
+\end{tikzpicture}
+}
+\label{fig:result}
+\end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../master.tex"
+%%% End: 
