@@ -1,7 +1,6 @@
-# Beamer template for LE2I - UB
+#QCAV-2015 presentation
 
-This repository hosts a template for presentation in beamer format. It is with the color of the LE2I and the Universite de Bourgogne
+Original template by G.Lemaitre, adapted by Joan Massich
 
-Share and modify as you want.
-
-Guillaume Lemaitre
+##Extra resources
+http://www.jasondavies.com/

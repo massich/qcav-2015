@@ -1,0 +1,912 @@
+\graphicspath{{chapters/survey/figures/}}
+\subsection{Overview}
+\begin{frame}\frametitle{Role of segmentation procedures within \ac{cad} systems}
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[auto, >=latex]
+		 
+	 \def\scale{1.8}
+	 \def\segDotDistance{-8pt}
+	 \tikzset{dot/.style={circle,fill=black,inner sep=0mm,minimum size=10pt}}
+	 \tikzset{elip/.style={draw,ellipse, minimum width={\scale*1.618cm},minimum height={\scale*.5cm} }}
+	  
+	 
+	 
+	 \draw node [elip] (cade1) {\acs{cade}}
+	 	   node [elip,right= of cade1] (cade2) {\acs{cade}}
+		   node [elip,right= of cade2] (cade3) {\acs{cade}}
+		  
+		   node [elip, below= of cade1] (cadx1) {\acs{cadx}}
+	 	   node [elip, right= of cadx1] (cadx2) {\acs{cadx}}
+		   node [elip, right= of cadx2] (cadx3) {\acs{cadx}} 
+		   ;
+
+	\draw ($(cade1.north east)$) ++({\segDotDistance},{\segDotDistance}) node [dot] {}
+		  ($(cadx3.north east)$) ++({\segDotDistance},{\segDotDistance}) node [dot] {}
+		  ($ (cade2) !.5! (cadx2) $) node [dot] (d){}
+	;
+
+	 \draw [ decoration={markings,mark=at position 1 with {\arrow[scale=2]{>}}},  postaction={decorate}] 	(cade1) -- (cadx1) ;
+	 \draw  [ decoration={markings,mark=at position 1 with {\arrow[scale=1.5]{>}}},  postaction={decorate}]  	(cade2) -- (d) ;
+	 \draw  [ decoration={markings,mark=at position 1 with {\arrow[scale=1.5]{>}}},  postaction={decorate}] 	(d) -- (cadx2);
+	 \draw  [ decoration={markings,mark=at position 1 with {\arrow[scale=2]{>}}},  postaction={decorate}]  	(cade3) -- (cadx3) ;	 
+		   
+
+\end{tikzpicture}
+\caption[]{Illustrative idea of the role of segmentation within a \ac{cad} framework showing that it can either be a separate process between a \ac{cade} and a \ac{cadx} or it can belong to any of the two \ac{cad} typologies: \ac{cade}, \ac{cadx} }
+\label{fig:cadseg}
+\end{figure}
+\end{frame}
+
+
+%\newcommand\icon[3][c]{%
+% \if e#1\def\cstretch{2}\else\def\cstretch{1}\fi%
+% \kern-1pt%
+% \hstretch{\cstretch}{%
+%  \raisebox{3pt}{\rotatebox{-45}{%
+%   \ifthenelse{\equal{#2}{}}{%
+%      \stackinset{c}{}{c}{}%
+%        {\scalebox{.9}{\textcolor{white}{\CircleSolid}}}%
+%        {\textcolor{black}{\CircleSolid}}%
+%   }{%
+%    \ifthenelse{\equal{#3}{}}{%
+%      \mbox{\textcolor{#2}{\CircleSolid}}%
+%    }{%
+%      \stackengine{0pt}{\textcolor{#2}{\CircleSolid}}%
+%        {\textcolor{#3}{\HalfCircleRight}}{O}{r}{F}{F}{L}%
+%    }%
+%   }%
+%  }}%
+% }%
+% \kern-.8pt%
+%}
+%\newcommand\X{\textsf{X}\,\,}
+%\parskip 2em
+\definecolor{xxColor}{RGB}{124,121,247}
+\definecolor{mlColor}{RGB}{222,209,111}
+\definecolor{acmColor}{RGB}{146,209,105}
+\definecolor{otherColor}{RGB}{113,130,227}
+\definecolor{textureColor}{RGB}{242,162,121}
+\definecolor{CIDcolor}{RGB}{93,186,172}
+\definecolor{CDIcolor}{RGB}{204,102,201}
+\definecolor{yycolor}{RGB}{191,96,124}
+\definecolor{auxColor}{RGB}{120,190,240}
+\definecolor{Qcolor}{RGB}{255,128,128}
+\definecolor{lightGray}{gray}{0.85}
+
+\begin{frame} \frametitle{Segmentation procedures based on user interaction I}
+	\begin{block}{Interactive segmentation}
+		\begin{description}
+		 	\item[Fully-Guided] the user assists the whole delineation.
+		 	\item[Semi-Automatic] the user conditions an algorithm to produce the delineation.
+		\end{description}
+	\end{block}
+	\begin{block}{Automatic segmentation}
+		\begin{description}
+		 	\item[Auto-Guided] the user information from a \emph{Semi-automatic} is substituted by an automatic procedure.
+		 	\item[Fully-Automatic] no process involved in the delineation can be substituted by a user interactive procedure.
+		\end{description}
+
+	\end{block}
+\end{frame}
+
+\newcommand*{\otherOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/blue1.pdf}};}}
+\newcommand*{\mlOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/yellow1.pdf}};}}
+\newcommand*{\mlOtherOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/yellowblue1.pdf}};}}
+\newcommand*{\acmOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/green1.pdf}};}}
+\newcommand*{\textureOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/orange1.pdf}};}}
+\newcommand*{\acmTextureOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/greenOrange1.pdf}};}}
+\newcommand*{\otherTextureOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/blueOrange1.pdf}};}}
+\newcommand*{\mlTextureOne}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/yellowOrange1.pdf}};}}
+\newcommand*{\mlTextureTwo}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/yellowOrange2.pdf}};}}
+\newcommand*{\otherTwo}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/blue2.pdf}};}}
+\newcommand*{\mlTwo}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/yellow2.pdf}};}}
+\newcommand*{\acmTwo}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/green2.pdf}};}}
+\newcommand*{\acmThree}{\tikz[baseline=(x),inner sep=1.5pt] {\coordinate (x) at (0,-1.8pt); \node[inner sep=0pt] {\includegraphics[height=8pt]{punts/green3.pdf}};}}
+
+
+\begin{frame} \frametitle{Segmentation procedures based on user interaction II}
+\vspace{-5pt}
+\begin{block}{Interactive segmentation}
+\begin{table}[h]\scriptsize
+  \centering
+  \begin{tabular}{r|l|m{.1cm}m{.1cm}m{.1cm}|p{4cm}}%{r|l|c|p{4cm}}
+%   								id	& Reference & D\,\,\,S\,\,\,P& Description  \\ \hline
+   								id	& Reference & D&S&P& Description  \\ \hline
+	
+{\color{fullyGuided}[63]}&{\usebeamercolor[fg]{structure} \textbf{Angelova      \emph{et al.}} 2010}	 	&&\multicolumn{2}{c|}{\otherTwo}& JetStream 			\\	\hline
+{\color{semiAuto}[58]}&{\usebeamercolor[fg]{structure} \textbf{Horsch        \emph{et al.}} 2001} 		&&&\otherOne& \acs{gcs}, \acs{ard} 						  	\\	
+%\rowcolor{lightGray}
+{\color{semiAuto}[61]}&{\usebeamercolor[fg]{structure} \textbf{Massich       \emph{et al.}} 2010} 		&&\otherOne&\otherOne& \acs{ml}, \acs{gcs} 						  		\\	
+{\color{semiAuto}[64]}&{\usebeamercolor[fg]{structure} \textbf{Gomez         \emph{et al.}} 2010} 		&&\otherOne&\otherOne&\acs{gcs}, watershed 					  	  	\\	
+\multirow{2}{*}{{\color{semiAuto}[66]}}&{\usebeamercolor[fg]{structure} \textbf{Pons          \emph{et al.}} 2013} 			&&\multicolumn{2}{c|}{\multirow{2}{*}{\mlTwo}}&\multirow{2}{*}{ \acs{map}-\acs{mrf}, \acs{em}}      	\\	
+& {\usebeamercolor[fg]{structure} \textbf{Xiao          \emph{et al.}} 2002} &&\multicolumn{2}{c|}{} \\
+{\color{semiAuto}[67]}&{\usebeamercolor[fg]{structure} \textbf{Chiang        \emph{et al.}} 2010} 			&&\mlOtherOne&& Grabcut, watershed 						  		\\	
+{\color{semiAuto}[68]}&{\usebeamercolor[fg]{structure} \textbf{Aleman-Flores \emph{et al.}} 2007}	&&\acmTextureOne&\acmOne& {\tiny \acs{acm}, gradient LevelSet, geodesic snake }\\	
+{\color{semiAuto}[69]}&{\usebeamercolor[fg]{structure} \textbf{Cui           \emph{et al.}} 2009} 			&&\mlOne&\acmOne& {\tiny \acs{rgi} variation, k-means (k=2), snake   	}\\	
+{\color{semiAuto}[70]}&{\usebeamercolor[fg]{structure} \textbf{Gao	          \emph{et al.}} 2012} 			&&\multicolumn{2}{c|}{\acmTwo}& GVF-LevelSets                               		\\
+
+
+  										
+%	\cite{Angelova:2010p14355}				& JetStream 											\\
+%    \cite{Horsch:2001p6028} 		    	    & \acs{gcs}, \acs{ard} 						\\
+%	\cite{massich2010lesion} 		    	        & \acs{ml}, \acs{gcs} 						\\
+%	\cite{Gomez:2010p14339} 		    	    &\acs{gcs}, watershed 					  	\\
+%	\cite{gerard2013} 				    	          	& \acs{map}-\acs{mrf}, \acs{em} 	\\
+%	\cite{chiang2010cell}			    	          	& Grabcut, watershed 						\\
+% 	\cite{AlemanFlores:2007p14310}	& \acs{acm}, gradient LevelSet, geodesic snake  \\
+%	\cite{Cui:2009p14325}							& \acs{rgi} variation, k-means (k=2), snake \\
+%	\cite{Gao:2012p14336}							& GVF-LevelSets \\
+%	\cite{Drukker:2002p10442} 					& \acs{gcs}, \acs{rgi} \\
+%													\acs{map},texture, \acs{gcs} \cite{massich2010lesion,massich2011seed,massich2012seed} \\
+%													\acs{map}, texture, \acs{rg}, snake \cite{Madabhushi:2003p6036} \\
+%													Th\cite{otsu1975threshold}, application criteria, snake \cite{Huang:2007p6100} \\
+%													\acs{ml} detection, \acs{ml} segmentation \cite{Zhang:2010p14317} \\
+%													\acs{ml} detection, \acs{ml} segmentation \cite{Jiang:2012p14354} \\
+%													Th\cite{otsu1975threshold}, application criteria\cite{Shan:2008p10923} for cropping, \acs{ml} segmentation \cite{Shan:2012p14347}}
+%	\def\fullyAutoMethods{watershed, texture merging, GVF-snake \cite{Huang:2005p11636} \\
+%unsupervised \acs{ml}, graph representation, merging, snake \cite{Huang:2012p14313} \\
+%\acs{nc}, graph representaiton, merging, morphology  \cite{Liu:2005p14341} \\
+%Objective function, \acs{gc}, \acs{dpm}\cite{felzenszwalb2010object},\acs{glcm} \cite{hao2012combining} \\
+%Watershed  \cite{Huang:2004p2092} \\
+%\acs{ml} \cite{Liu:2010p12036} \\
+%Model driven LevelSet \cite{Liu:2010p14328} \\
+%Inpainting \cite{Yeh:2009p11985}		   										
+   										
+ 
+%   \hline \hline
+% j \\ 
+% k \\ 
+% l \\ 
+% m \\ 
+% n \\ 
+% o \\ 
+% p \\  \hline
+% q \\ 
+% r \\ 
+% s \\ 
+% t \\ 
+% u \\ 
+% v  \\ 
+% w \\
+% x  \\
+ \end{tabular}
+ \caption{{\tiny Interactive segmentation bibliography summary. D: detection, S: segmentation and P: post-processing procedures. 
+ 				\mlOne~\ac{ml} ,  \acmOne~\ac{acm} and \otherOne~other methodologies based procedure. \textureOne~use indicates use of texture. }}
+\end{table}
+\vspace{-5pt}
+\end{block}
+%\includegraphics[height=.8\textheight]{survey.png}
+\end{frame}
+
+
+\begin{frame} \frametitle{Segmentation procedures based on user interaction II}
+\vspace*{-10pt}
+\begin{varblock}[11cm]{Automatic segmentation}
+\begin{table}[h]\scriptsize
+  \centering
+  \begin{tabular}{r|l|m{.1cm}m{.1cm}m{.1cm}|p{4.5cm}}%{r|l|c|p{4cm}}
+%   								id	& Reference & D\,\,\,S\,\,\,P& Description  \\ \hline
+   								id	& Reference & D&S&P& Description  \\ \hline
+	
+%[71]	&{\usebeamercolor[fg]{structure} \textbf{Drukker   		\emph{et al.}}2002 }	&
+%\begin{tikzpicture}[baseline, inner sep=0] 
+%\node[draw,anchor=base] {xxx}; 
+%\draw circle[radius=5pt,fill=black];
+%\end{tikzpicture}
+%
+%&&		& \acs{gcs}, \acs{rgi} \\                                       
+%k	&{\usebeamercolor[fg]{structure} \textbf{Massich    	\emph{et al.}}2010 }	&
+%	\begin{tikzpicture}[baseline=(label.north)]
+%	\coordinate (rect) at (.5,.5);
+%	\coordinate (aux) at (.5,.53);
+%
+%	\begin{tiny}
+%		\draw (0,0) rectangle (rect);
+%		\draw (0.25,0) node[anchor=north](label){Oval};
+%	\end{tiny}
+%	
+%	\begin{pgfonlayer}{background}
+%	\fill [green!30,rounded corners=2pt] ($ (label.west) !.65! (label.south west) $) rectangle (aux -| label.east);
+%	\end{pgfonlayer}
+%	\end{tikzpicture}
+%&&		&\acs{map},texture, \acs{gcs} \\              
+                          
+{\color{autoGuided}[71]}&{\usebeamercolor[fg]{structure} \textbf{Drukker   		\emph{et al.}} 2002 }	&\otherOne&\otherOne&\otherOne& \acs{gcs}, \acs{rgi} \\                                       
+
+{\color{autoGuided}[61]}&{\usebeamercolor[fg]{structure} \textbf{Massich    	\emph{et al.}} 2010 }	&\mlTextureOne&\otherOne&\otherOne&\acs{map},texture, \acs{gcs} \\              
+                  
+{\color{autoGuided}[60]}&{\usebeamercolor[fg]{structure} \textbf{Madabhushi	\emph{et al.}} 2003 }	&\mlOne&\otherOne&\acmOne		&\acs{map}, texture, \acs{rg}, snake \\                         
+
+{\color{autoGuided}[75]}	&{\usebeamercolor[fg]{structure} \textbf{Huang       	\emph{et al.}} 2007 }	&\multicolumn{2}{c}{\otherTwo}&\acmOne		&Th, app. criteria, snake \\             
+
+{\color{autoGuided}[76]}	&{\usebeamercolor[fg]{structure} \textbf{Zhang      		\emph{et al.}} 2010 }	&\mlOne&\multicolumn{2}{c|}{\mlTwo}	&\acs{ml} detection, \acs{ml} segmentation \\                        
+
+{\color{autoGuided}[77]}	&{\usebeamercolor[fg]{structure} \textbf{Jiang      		\emph{et al.}} 2012 }	&\multicolumn{2}{c}{\mlTwo}&		&\acs{ml} detection, \acs{ml} segmentation \\  
+
+{\color{autoGuided}[79]}	&{\usebeamercolor[fg]{structure} \textbf{Shan       		\emph{et al.}} 2012 }	&\multicolumn{2}{c}{\mlTextureTwo}&\otherOne		&{\tiny Th, app. criteria, \acs{ml} segmentation} \\   \hline
+
+{\color{fullyAuto}[80]}	&{\usebeamercolor[fg]{structure} \textbf{Huang      		\emph{et al.}} 2005 }	&&\otherTextureOne&\acmOne		&{\tiny watershed, texture merging, GVF-snake }\\                       
+
+{\color{fullyAuto}[81]}	&{\usebeamercolor[fg]{structure} \textbf{Huang      		\emph{et al.}} 2012 }	&\multicolumn{2}{c}{\mlTwo}&	\acmOne	&{\tiny \acs{ml}, graph representation, merging, snake }\\ 
+
+{\color{fullyAuto}[82]}	&{\usebeamercolor[fg]{structure} \textbf{Liu        			\emph{et al.}} 2005 }	&\mlOne&\otherOne&		&{\tiny \acs{nc}, graph representaiton, merging, morphology }\\         
+
+{\color{fullyAuto}[84]}	&{\usebeamercolor[fg]{structure} \textbf{Hao        		\emph{et al.}} 2012 }	&\multicolumn{2}{c}{\mlTextureTwo}&		&{\tiny Objective function, \acs{gc}, \acs{dpm},\acs{glcm}}\\           
+
+{\color{fullyAuto}[59]}	&{\usebeamercolor[fg]{structure} \textbf{Huang      		\emph{et al.}} 2004 }	&&\otherOne&\otherOne	&Watershed \\                                                   
+
+{\color{fullyAuto}[57]}	&{\usebeamercolor[fg]{structure} \textbf{Liu       			\emph{et al.}} 2010 }	&\mlOne&\mlOne&\mlOne		&\acs{ml} \\                                                    
+
+{\color{fullyAuto}[85]}	&{\usebeamercolor[fg]{structure} \textbf{Liu       			\emph{et al.}} 2010 }	&\multicolumn{3}{c|}{\acmThree}&Model driven LevelSet \\                                       
+
+{\color{fullyAuto}[86]}	&{\usebeamercolor[fg]{structure} \textbf{Yeh  	  			\emph{et al.}} 2009 }	&&\otherOne&		&Inpainting \\	                                                
+
+ \end{tabular}
+% \caption{{\tiny Interactive segmentation bibliography summary.
+% 				\icon{mlColor}{} \ac{ml} methodology, 
+% 				\icon{acmColor}{} \ac{acm} methodology,
+% 				\icon{otherColor}{} other methodologies,
+% 				\icon{textureColor}{} use of texture. }}
+ \caption{{\tiny Interactive segmentation bibliography summary. D: detection, S: segmentation and P: post-processing procedures. 
+ 				\mlOne~\ac{ml} ,  \acmOne~\ac{acm} and \otherOne~other methodologies based procedure. \textureOne~use indicates use of texture. }}
+\end{table}
+\vspace*{-5pt}
+\end{varblock}
+\end{frame}
+
+\begin{frame} \frametitle{Segmentation procedures}
+\begin{figure}
+%\includegraphics[trim=100 520 135 150,clip,width=\textwidth]{map1.pdf}
+\centering
+
+\begin{tikzpicture}[scale=1.85, every node/.style={scale=0.8}]
+
+%\draw[step=.25cm, gray, thin] (-2,-2) grid (2,2); 
+%% %\filldraw[fill=green!20,draw=green!50!black] (0,0) -- (3mm,0mm) arc (0:30:3mm) -- cycle; 
+% \draw[->] (-1.25,0) -- (1.25,0) coordinate (x axis);
+% \draw[->] (0,-1.25) -- (0,1.25) coordinate (y axis);
+
+\draw  (-.5,.1) circle [radius=1] ( .5,.1) circle [radius=1] ( -.2,-.6) circle [radius=1] ;
+\def\myFontScale{.8}
+\draw %the circle names and the legend of the signs inside
+  ( .75,1)		node [right,	fill=white] 				{\acf{acm}}
+  ++(.8,-.20) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\ddagger$ Snake, GVF-Snake}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\between$ Gradient LevelSet, GVF-LevelSet}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\otimes$ Geodesic Snake}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\odot$ Region LevelSet, ACWE}
+      
+  (-.75,1)		node [left,		fill=white] 				{\acf{ml}	}
+  ++(-.8,-.20) 	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Unsupervised Learning $\square$ }
+  ++( 0,-.18) 	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Supervised Learning $\blacksquare$ }
+  
+  (-.2,-1.65) 	node [align=center,	fill=white] 	{Other methodologies}
+  ++(1,.20)  	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\star$ application based metric/procedure}
+  ++( 0,.20)  	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\diamond$ \acf{rg}}
+  ++( 0,.20)  	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\ast$ \acf{gcs}}  
+  (-.2,-1.65) 	node {}
+  ++(-1,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Jetstream $\nmid$}
+  ++( 0,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Inpainting $\nparallel$}
+  ++( 0,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}WaterShed transform $\wr$};
+  
+\draw 
+		% Active Contour 
+		      (.7,.5) 	node [font=\small] {\color{semiAuto}[68]$\between\otimes$}
+			(1.1,.2) 	node [font=\small] {\color{semiAuto}[70]$\ddagger$}
+			(1.2,-.2) 	node [font=\small] {\color{fullyAuto}[85]$\odot$}
+		% Machine Learning		
+		 (-1.15,.6)		node [font=\small] {\color{semiAuto}[66]$\blacksquare$}
+			 (-.5,.7) 		node [font=\small] {\color{autoGuided}[76]$\blacksquare$}
+	    ++(	-.2,.15)	node [font=\small] {\color{semiAuto}[65]$\blacksquare$}
+			 (-.7,.5) 		node [font=\small] {\color{autoGuided}[77]$\blacksquare$}
+		   (-1.2,.3) 		node [font=\small] {\color{fullyAuto}[84]$\square\blacksquare$}
+		++(-.1,-.25) 	node [font=\small] {\color{fullyAuto}[57]$\blacksquare$}
+		% Other methodologies
+			  (0,-1.1) 		node [font=\small] {\color{semiAuto}[64]$\ast \wr$}
+		++(.2,-.2) 		node [font=\small] {\color{semiAuto}[58]$\ast$}
+		++(-.5,0)	 	node [font=\small] {\color{fullyGuided}[63]$\nmid$}
+		++(-.2,.2) 		node [font=\small] {\color{autoGuided}[71]$\ast$}
+		++(1,0) 			node [font=\small] {\color{fullyAuto}[59]$\wr$}
+			  (-.7,-1.3) 	node [font=\small] {\color{fullyAuto}[86]$\nparallel$}
+		% Machine Learning + Other
+			  (-.7,-.7) 	node [font=\small] {\color{semiAuto}[67]$\square\wr$}
+		++(0,.2) 	node [font=\small] {\color{autoGuided}[61]$\blacksquare\diamond\ast$}
+		++(0,.2) 	node [font=\small] {\color{autoGuided}[79]$\star\blacksquare$}
+		++(0,.2) 	node [font=\small] {\color{fullyAuto}[82]$\square\star$}
+		% Machine Learning + ACM
+			 (0,.65) node [font=\small] {\color{fullyAuto}[81]$\square\ddagger$}
+		% ACM + Other
+			  (.3,-.6) 		node [right,font=\small] {\color{autoGuided}[75]$\star\between$}
+		++(-.15,-.2) 	node [right,font=\small] {\color{fullyAuto}[80]$\wr\ddagger$}
+		% All
+			  (0,0) node [font=\small] {\color{autoGuided}[60]$\blacksquare\star\diamond\ddagger$}
+			  (0,-.3) node [font=\small] {\color{semiAuto}[69]$\star\square\ddagger$};
+		
+\end{tikzpicture}
+
+\caption{Conceptual map of the segmentation strategy used in the methodologies.}
+\end{figure}
+\end{frame}
+
+\begin{frame} \frametitle{Segmentation procedures}
+\begin{figure}
+%\includegraphics[trim=100 520 135 150,clip,width=\textwidth]{map1.pdf}
+\centering
+
+\begin{tikzpicture}[scale=1.85, every node/.style={scale=0.8}]
+
+%\draw[step=.25cm, gray, thin] (-2,-2) grid (2,2); 
+%% %\filldraw[fill=green!20,draw=green!50!black] (0,0) -- (3mm,0mm) arc (0:30:3mm) -- cycle; 
+% \draw[->] (-1.25,0) -- (1.25,0) coordinate (x axis);
+% \draw[->] (0,-1.25) -- (0,1.25) coordinate (y axis);
+
+\draw  (-.5,.1) circle [radius=1] ( .5,.1) circle [radius=1] ( -.2,-.6) circle [radius=1] ;
+\def\myFontScale{.8}
+\draw %the circle names and the legend of the signs inside
+  ( .75,1)		node [right,	fill=white] 				{\acf{acm}}
+  ++(.8,-.20) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\ddagger$ Snake, GVF-Snake}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\between$ Gradient LevelSet, GVF-LevelSet}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\otimes$ Geodesic Snake}
+  ++( 0,-.18) 	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\odot$ Region LevelSet, ACWE}
+      
+  (-.75,1)		node [left,		fill=white] 				{\acf{ml}	}
+  ++(-.8,-.20) 	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Unsupervised Learning $\square$ }
+  ++( 0,-.18) 	node [left,	fill=white,font=\footnotesize,draw=red]				{\scalefont{\myFontScale}Supervised Learning $\blacksquare$ }
+  
+  (-.2,-1.65) 	node [align=center,	fill=white] 	{Other methodologies}
+  ++(1,.20)  	node [right,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}$\star$ application based metric/procedure}
+  ++( 0,.20)  	node [right,	fill=white,font=\footnotesize,draw=red]		(rbase)		{\scalefont{\myFontScale}$\diamond$ \acf{rg}}
+  ++( 0,.20)  	node [right,	fill=white,font=\footnotesize,draw=red]		(rend)		{\scalefont{\myFontScale}$\ast$ \acf{gcs}}  
+  (-.2,-1.65) 	node {}
+  ++(-1,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Jetstream $\nmid$}
+  ++( 0,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}Inpainting $\nparallel$}
+  ++( 0,.20)  	node [left,	fill=white,font=\footnotesize]				{\scalefont{\myFontScale}WaterShed transform $\wr$};
+  
+\draw 
+		% Active Contour 
+		      (.7,.5) 	node [font=\small] {\color{semiAuto}[68]$\between\otimes$}
+			(1.1,.2) 	node [font=\small] {\color{semiAuto}[70]$\ddagger$}
+			(1.2,-.2) 	node [font=\small] {\color{fullyAuto}[85]$\odot$}
+		% Machine Learning		
+		 (-1.15,.6)		node [font=\small] {\color{semiAuto}[66]$\blacksquare$}
+			 (-.5,.7) 		node [font=\small] {\color{autoGuided}[76]$\blacksquare$}
+	    ++(	-.2,.15)	node [font=\small] {\color{semiAuto}[65]$\blacksquare$}
+			 (-.7,.5) 		node [font=\small] {\color{autoGuided}[77]$\blacksquare$}
+		   (-1.2,.3) 		node [font=\small] {\color{fullyAuto}[84]$\square\blacksquare$}
+		++(-.1,-.25) 	node [font=\small] {\color{fullyAuto}[57]$\blacksquare$}
+		% Other methodologies
+			  (0,-1.1) 		node [font=\small] {\color{semiAuto}[64]$\ast \wr$}
+		++(.2,-.2) 		node [font=\small] {\color{semiAuto}[58]$\ast$}
+		++(-.5,0)	 	node [font=\small] {\color{fullyGuided}[63]$\nmid$}
+		++(-.2,.2) 		node [font=\small] {\color{autoGuided}[71]$\ast$}
+		++(1,0) 			node [font=\small] {\color{fullyAuto}[59]$\wr$}
+			  (-.7,-1.3) 	node [font=\small] {\color{fullyAuto}[86]$\nparallel$}
+		% Machine Learning + Other
+			  (-.7,-.7) 	node [font=\small] {\color{semiAuto}[67]$\square\wr$}
+		++(0,.2) 	node [font=\small,draw=red,inner sep=2pt] {\color{autoGuided}[61]$\blacksquare\diamond\ast$}
+		++(0,.2) 	node [font=\small] {\color{autoGuided}[79]$\star\blacksquare$}
+		++(0,.2) 	node [font=\small] {\color{fullyAuto}[82]$\square\star$}
+		% Machine Learning + ACM
+			 (0,.65) node [font=\small] {\color{fullyAuto}[81]$\square\ddagger$}
+		% ACM + Other
+			  (.3,-.6) 		node [right,font=\small] {\color{autoGuided}[75]$\star\between$}
+		++(-.15,-.2) 	node [right,font=\small] {\color{fullyAuto}[80]$\wr\ddagger$}
+		% All
+			  (0,0) node [font=\small] {\color{autoGuided}[60]$\blacksquare\star\diamond\ddagger$}
+			  (0,-.3) node [font=\small] {\color{semiAuto}[69]$\star\square\ddagger$};
+		
+\end{tikzpicture}
+
+\caption{Conceptual map of the segmentation strategy used in the methodologies.}
+\end{figure}
+\end{frame}
+
+
+
+%\subsection{ML training strategies}
+%\begin{frame} \frametitle{Training analysis of th \ac{ml} based segmentation procedures}
+%\includegraphics[trim=100 505 135 155,clip,width=\textwidth]{map2.pdf}
+%\end{frame}
+
+\subsection{Previous work}
+
+\begin{frame}\frametitle{\acf{gcs}-based segmentation\footnotemark[1]$^{\text{-3}}$}
+\begin{center}
+
+\begin{figure}[Htb]%[Htb]%  figure placement: here, top, bottom, or page
+\centering
+\includegraphics[trim=2 0 2 2, clip,width=\textwidth]{IWDMmethodDiagram}
+\caption{\centering \ac{gcs} complete methodology block diagram.}
+\label{fig:methodDiagram}
+\end{figure}
+\end{center}
+\footnotetext[1]{\fullcite{massich2010lesion}}
+\footnotetext[2]{\fullcite{massich2011seed}}
+\footnotetext[3]{\fullcite{massich2012seed}}
+\end{frame}
+
+\begin{frame}\frametitle{\acs{gcs}-based segmentation}\tiny
+\begin{columns}
+\begin{column}{.4\textwidth}
+\begin{figure}[Htb]%[Htb]%  figure placement: here, top, bottom, or page
+\centering
+\includegraphics[trim=2 0 2 2, clip,width=\textwidth]{IWDMmethodDiagram}
+\caption{{\tiny \ac{gcs} complete methodology block diagram.}}
+\label{fig:methodDiagram}
+\end{figure}
+\end{column}
+\begin{column}{.6\textwidth}
+\begin{block}{{\small Bayesian formulation of Stavros criteria\footnotemark[1]}}
+{\tiny
+\begin{itemize}
+\item $P(Lesion|I,T)  = \frac{P(I,T|Lesion) \cdot P(Lesion)}{P(I,T)} $
+\item $P(Lesion|I,T)  = P(I| Lesion ) \cdot P(T| Lesion) \cdot P( Lesion| x,y)$
+\end{itemize}
+}
+\end{block}
+\end{column}
+\end{columns}
+\centering
+\begin{itemize}\footnotesize
+\item $T(x,y) = I(x,y) - \frac{1}{N} \sum\nolimits_{\delta=0}^{N-1}I_\delta(x,y) $
+\item $P(I,T|Lesion)\stackrel{iid}{=}P(I|Lesion) \cdot P(T|Lesion) $
+\item {\footnotesize \ac{pdf} are calculated as: }
+\begin{enumerate}\scriptsize
+\item Occurrence quantification
+\item Gaussian smoothing
+\item Normalization
+\end{enumerate}
+\end{itemize}
+\footnotetext[1]{\fullcite{stavros2004breast}}
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{\acs{gcs}-based segmentation}\tiny
+\begin{columns}
+\begin{column}{.4\textwidth}
+\begin{figure}[Htb]%[Htb]%  figure placement: here, top, bottom, or page
+\centering
+\includegraphics[trim=2 0 2 2, clip,width=\textwidth]{IWDMmethodDiagram}
+\caption{{\tiny \ac{gcs} complete methodology block diagram.}}
+\label{fig:methodDiagram}
+\end{figure}
+\end{column}
+\begin{column}{.6\textwidth}
+\begin{block}{{\small \acf{rg} formulation}}
+\begin{itemize}
+\item Morphological operation as expansion
+\item $I(x,y) \in R_{i+1} \iff I(x,y) \in \mu(I(R_i))\pm\frac{\sigma(I(R_i))}{2}$
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\centering
+\vspace{-5pt}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/seeds.png}~
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/region.png}~ 
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/gaussian.png}
+\caption{\scalefont{.9} Steps needed to generate the bivariate Gaussian function. From left to right, overlaid to the original image: candidate regions and the selected, \ac{rg} pre-segmentation, iso-lines of the final Gaussian function obtained from ellipse fitting to the pre-segmentation.  }
+\end{figure}
+
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{\acf{gcs}-based segmentation}\tiny
+\begin{columns}
+\begin{column}{.5\textwidth}
+\begin{figure}[Htb]%[Htb]%  figure placement: here, top, bottom, or page
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\includegraphics[trim=2 0 2 2, clip,width=\textwidth]{IWDMmethodDiagram}
+\caption{{\tiny \ac{gcs} complete methodology block diagram.}}
+\label{fig:methodDiagram}
+\end{figure}
+\end{column}
+\vspace{-5pt}
+\begin{column}{.55\textwidth}
+%\begin{block}{{\small \acf{gcs}}}
+\begin{figure}[Htb]%[Htb]%  figure placement: here, top, bottom, or page
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\includegraphics[trim= 0 5 0 0, clip,width=.8\textwidth]{mscThesis/gcs_ref2.pdf}
+\caption{{\tiny Block diagram of the final segmentation procedure.}}
+\label{fig:gcs}
+\end{figure}
+%\end{block}
+\end{column}
+\end{columns}
+\vspace{-10pt}
+\centering
+\begin{figure}[Htbp]
+\centering
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/Sono.png}~
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/SonoProcessed.png}~ 
+\includegraphics[trim= 0 5 0 10, clip,height=.24\textwidth]{mscThesis/SonoPsi.png}
+\caption{{\scriptsize \scalefont{.88} $\Psi(x,y)$ construction for \acf{gcs} segmentation purposes. From left to right: original image, image dependent function, Gaussian constrained function. }}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{\acs{gcs}-base segmentation qualitative results}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[height=.33\textwidth]{mscThesis/final7.png}\,
+\includegraphics[height=.33\textwidth]{mscThesis/final13.png}\vspace{3pt}
+\includegraphics[height=.33\textwidth]{mscThesis/final14.png}\,
+\includegraphics[height=.33\textwidth]{mscThesis/final15.png}
+\caption{\ac{gcs}-based segmentation qualitative results. Colored lines represent possible thresholds at different levels and the white dashed line outlines the final segmentation.}
+\end{figure}
+\end{frame}
+
+\subsection{Reported results}
+\begin{frame} \frametitle{Methodology assessment}
+\begin{itemize}
+\item Uncommon database to assess the methodologies
+\item Uncommon assessing criteria
+\setbeamertemplate{itemize items}[triangle]
+\begin{itemize}
+\item AOV (or JSC), DSC, TPR, PPV, NRV, FPR, FNR, Specificity
+\item HD, AMED, PD
+\end{itemize}
+\end{itemize}
+\begin{columns}
+\begin{column}{.5\textwidth}
+\begin{figure}
+\includegraphics[width=.7\textwidth]{aor}
+\caption{Areas arising from comparing two delineations.}
+\end{figure}
+\end{column}
+\begin{column}{.5\textwidth}
+\vspace{-20pt}
+\setlength{\jot}{10pt}% tweak the space between rows
+\begin{align*}
+AOV &= \frac{TP}{TP+FP+FN} \\ 
+		 &=\frac{|A \wedge M|}{|A \vee M|} \qquad \in [0,1]
+\end{align*}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame} \frametitle{Reported results in terms of area overlap (AOV) coefficient}
+\vspace{-5pt}
+\begin{figure}
+\tiny
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{tikzpicture}[scale=.58]
+\def\labels{	{\color{semiAuto}[68]},%\cite{AlemanFlores:2007p14310}},
+						{\color{semiAuto}[70]},%\cite{Gao:2012p14336}},
+						{\color{fullyAuto}[85]},%\cite{Liu:2010p14328}},
+						{\color{semiAuto}[69]},%\cite{Cui:2009p14325}},					
+						{\color{autoGuided}[75]},%\cite{Huang:2007p6100}},
+						{\color{fullyAuto}[80]},%\cite{Huang:2005p11636}},
+						{\color{semiAuto}[64]},%\cite{Gomez:2010p14339}},
+						{\color{semiAuto}[58]},%\cite{Horsch:2001p6028}},
+						{\color{fullyAuto}[86]},%\cite{Yeh:2009p11985}},
+						{\color{autoGuided}[79]},%\cite{Shan:2012p14347}},
+						{\color{autoGuided}[61]},%\cite{massich2010lesion}},
+						{\color{semiAuto}[66]},%\cite{Xiao:2002p5639,gerard2013}},
+						{\color{autoGuided}[76]},%\cite{Zhang:2010p14317}},
+						{\color{fullyAuto}[84]},%\cite{hao2012combining}},
+						{\color{autoGuided}[60]},%\cite{Madabhushi:2003p6036}},
+						{\color{fullyAuto}[81]}}%\cite{Huang:2012p14313}}}
+
+\def\reward{88.3,86.3,88.1,74.5,77.6,78.6,85.0,73.0,73.3,83.1,64.0,54.9,84.0,75.0,62.0,85.2}
+\def\dbSize{32,20,76,488,118,20,50,400,6,120,25,352,347,480,42,20}
+\def\dbClass{1,1,2,3,2,1,2,3,1,2,1,3,3,3,1,1}		
+\def\cZoom{3} 
+\def\percentageLabelAngle{90}
+\def\nbeams{16}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+%\def\globalRotation{10}
+\pgfmathsetmacro\globalRotation{\halfAngle}
+
+% draw manual AOV results
+\filldraw[blue!15!white,even odd rule] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+\draw[thin,color=blue!50!white,dashed] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+
+%\foreach \x in {.125,.25, ...,1} { \draw[thin]  (0,0) circle [radius={2*\x}]; }
+% draw the radiants with the reference label
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*1}) ;
+\draw	(\cAngle:{\cZoom*1.1})  node[fill=white, inner sep=0pt] {{\tiny \textbf  \n}}; %referencies
+}
+
+
+% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/100}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/100*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{5}{5}\selectfont]{$\x$};
+}
+
+
+
+% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/100}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/100}) } ;
+
+% label all the percentags
+\foreach \n [count=\ni] in \dbSize 
+{
+	\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+	\pgfmathsetmacro\nreward{\aux[\ni-1]}
+	\draw (\cAngle:{\cZoom*1.4}) node[align=center] {{\color{blue}\nreward $\%$} \\ {\color{red}\n} };
+} ;
+
+% draw the database rose
+\def\dbScale{\9}
+\foreach \n [count=\ni] in \dbClass
+\filldraw[fill=red!20!white, draw=red!50!black]
+(0,0) -- ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\cZoom*\n/9}) arc ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\ni*(360/\nbeams)+\halfAngle+\globalRotation}:{\cZoom*\n/9}) -- cycle;
+\foreach \x in {1,2,3}
+\draw [thin,color=red!50!black,dashed] (0,0) circle [radius={\cZoom*\x/9}];
+
+%% draw the domain of each class 
+  \def\puta{	3/0/{ACM},
+  			3/3/{ACM+Other},
+  			3/6/{Other}}
+\def\putaa{  	2/9/{Other+ML},
+  			3/11/{ML},
+  			2/14/{ML+ACM}}
+
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+    	{\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);}
+  }
+  
+   \foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \putaa
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.7pt}
+    	{\draw [decoration={text along path, text={\name},text align={center}},decorate] (\initialAngle:\r) arc (\initialAngle:\finalAngle:\r);}    			 
+  }
+  
+    \node [anchor=north west] at (\cZoom*1.8,\cZoom*1.5){
+	\begin{tikzpicture}
+  \begin{customlegend}[legend entries={Dataset size categorization,Dataset size,AOV results, Manual delineation AOV, AOV percentage}]
+    \addlegendimage{red,fill=red!20!white, draw=red!60!gray, ybar, ybar legend}
+    \addlegendimage{number in legend=XX,red}
+    \addlegendimage{red,draw=blue,thick,sharp plot}
+    \addlegendimage{red,fill=blue!15!white,draw=blue,dashed,area legend}
+    \addlegendimage{number in legend=XX.X\%,blue}
+
+    \end{customlegend}
+\end{tikzpicture}}; 
+
+\end{tikzpicture}
+\caption{{\tiny Circular representation of the reported results grouped by methodology class. From inside to outside: used dataset categorization, AOV, work ID, numeric data and methodology category label. The work ID is colored as follows: semi-automatic {\color{semiAuto}\semiAutoColor}, auto-guided{\color{autoGuided}\autoGuidedColor}, and fully automatic{\color{fullyAuto}\fullyAutoColor}.}} 
+\end{figure}
+\end{frame}
+
+\begin{frame} \frametitle{Reported results in terms of area overlap (AOV) coefficient}
+\vspace{-10pt}
+\begin{figure}
+\tiny
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{tikzpicture}[node distance=0cm,inner sep=0pt]
+\node {
+\begin{tikzpicture}[scale=.55]
+\def\labels{{\color{autoGuided}[60]},%\cite{Madabhushi:2003p6036}},
+{\color{autoGuided}[61]},%\cite{massich2010lesion}},
+{\color{semiAuto}[66]},%\cite{Xiao:2002p5639,gerard2013}},
+{\color{autoGuided}[79]},%\cite{Shan:2012p14347}},
+{\color{autoGuided}[76]},%\cite{Zhang:2010p14317}},
+{\color{fullyAuto}[84]},%\cite{hao2012combining}},
+{\color{semiAuto}[69]},%\cite{Cui:2009p14325}},				
+{\color{fullyAuto}[81]}}%\cite{Huang:2012p14313}}}
+\def\reward{62.0,64.0,59.4,83.1,84.0,75.0,74.5,85.2}
+\def\dbSize{42,25,352,120,347,480,488,20}
+\def\dbClass{1,1,3,2,3,3,3,1}
+
+\def\cZoom{3} 
+\def\percentageLabelAngle{90}
+\def\nbeams{8}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+%\def\globalRotation{10}
+\pgfmathsetmacro\globalRotation{-1*\halfAngle}
+
+% draw manual AOV results
+\filldraw[blue!15!white,even odd rule] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+\draw[thin,color=blue!50!white,dashed] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+
+%\foreach \x in {.125,.25, ...,1} { \draw[thin]  (0,0) circle [radius={2*\x}]; }
+% draw the radiants with the reference label
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*1}) ;
+\draw	(\cAngle:{\cZoom*1.1})  node[fill=white, inner sep=0pt] {{\tiny \textbf  \n}}; %referencies
+}
+
+% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/100}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/100*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{5}{5}\selectfont]{$\x$};
+}
+
+% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/100}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/100}) } ;
+
+% label all the percentags
+\foreach \n [count=\ni] in \dbSize 
+{
+	\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+	\pgfmathsetmacro\nreward{\aux[\ni-1]}
+	\draw (\cAngle:{\cZoom*1.4}) node[align=center] {{\color{blue}\nreward $\%$} \\ {\color{red}\n} };
+} ;
+
+% draw the database rose
+\def\dbScale{\9}
+\foreach \n [count=\ni] in \dbClass
+\filldraw[fill=red!20!white, draw=red!50!black]
+(0,0) -- ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\cZoom*\n/9}) arc ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\ni*(360/\nbeams)+\halfAngle+\globalRotation}:{\cZoom*\n/9}) -- cycle;
+\foreach \x in {1,2,3}
+\draw [thin,color=red!50!black,dashed] (0,0) circle [radius={\cZoom*\x/9}];
+
+%% draw the domain of each class 
+  \def\puta{	2/0/{DB-Detect.},
+  			1/2/{Img.-Seg.},1/3/{DB-Seg.}}
+\def\putaa{1/4/{DB-Detect.+Img.-Seg.},
+  			 1/5/{Integrated}, 	2/6/{Unsupervised}}
+
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+    	{\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);}
+  }
+  
+   \foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \putaa
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.7pt}
+    	{\draw [decoration={text along path, text={\name},text align={center}},decorate] (\initialAngle:\r) arc (\initialAngle:\finalAngle:\r);}    			 
+  }
+        
+\end{tikzpicture}};
+\node at (5.5,.1) {
+\begin{tikzpicture}[scale=.55]
+
+\def\labels{	{\color{semiAuto}[70]},%\cite{Gao:2012p14336}},
+						{\color{fullyAuto}[80]},%\cite{Huang:2005p11636}},
+						{\color{autoGuided}[60]},%\cite{Madabhushi:2003p6036}},
+{\color{semiAuto}[69]},%\cite{Cui:2009p14325}},		
+{\color{fullyAuto}[81]},%\cite{Huang:2012p14313}},	
+{\color{autoGuided}[75]},%\cite{Huang:2007p6100}},
+{\color{semiAuto}[68]},%\cite{AlemanFlores:2007p14310}},
+{\color{fullyAuto}[85]}}%\cite{Liu:2010p14328}},}
+
+\def\reward{86.3,78.6,62.0,74.5,85.2,77.6,88.3,88.1}
+\def\dbSize{20,20,42,488,20,118,32,76}
+\def\dbClass{1,1,1,3,1,2,1,1}		
+\def\cZoom{3} 
+\def\percentageLabelAngle{90}
+\def\nbeams{8}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+%\def\globalRotation{10}
+\pgfmathsetmacro\globalRotation{\halfAngle}
+
+% draw manual AOV results
+\filldraw[blue!15!white,even odd rule] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+\draw[thin,color=blue!50!white,dashed] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+
+%\foreach \x in {.125,.25, ...,1} { \draw[thin]  (0,0) circle [radius={2*\x}]; }
+% draw the radiants with the reference label
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*1}) ;
+\draw	(\cAngle:{\cZoom*1.1})  node[fill=white, inner sep=0pt] {{\tiny \textbf  \n}}; %referencies
+}
+
+% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/100}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/100*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{5}{5}\selectfont]{$\x$};
+}
+
+% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/100}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/100}) } ;
+
+% label all the percentags
+\foreach \n [count=\ni] in \dbSize 
+{
+	\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+	\pgfmathsetmacro\nreward{\aux[\ni-1]}
+	\draw (\cAngle:{\cZoom*1.4}) node[align=center] {{\color{blue}\nreward $\%$} \\ {\color{red}\n} };
+} ;
+
+% draw the database rose
+\def\dbScale{\9}
+\foreach \n [count=\ni] in \dbClass
+\filldraw[fill=red!20!white, draw=red!50!black]
+(0,0) -- ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\cZoom*\n/9}) arc ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\ni*(360/\nbeams)+\halfAngle+\globalRotation}:{\cZoom*\n/9}) -- cycle;
+\foreach \x in {1,2,3}
+\draw [thin,color=red!50!black,dashed] (0,0) circle [radius={\cZoom*\x/9}];
+
+%% draw the domain of each class 
+  \def\puta{	5/0/{Snakes}}
+\def\putaa{  	1/5/{LevelSet},
+  						1/6/{LevelSet+geodesic Snake},
+  						1/7/{RegionLevelset}}
+
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+    	{\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);}
+  }
+  
+   \foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \putaa
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.7pt}
+    	{\draw [decoration={text along path, text={\name},text align={center}},decorate] (\initialAngle:\r) arc (\initialAngle:\finalAngle:\r);}    			 
+  }
+\end{tikzpicture}};
+\end{tikzpicture}
+\caption{{\scriptsize Split of the circular representation of the reported results. Left: methodologies using \acf{ml}. Right: methodologies using \acf{acm}.}} 
+\end{figure}
+\end{frame}

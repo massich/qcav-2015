@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=.17]
+%boxSize =@(x) [x/((x/1.62)^.5) ((x/1.62)^.5)]
+ % \draw[step=2.5cm,gray,very thin] (0,0) grid (40,40);
+%  \draw[step=10cm,very thin] (0,0) grid (40,40);
+
+  \draw 	(0,0) 		rectangle +(20.787,33.675)
+  	 	%(5,1.6) 	rectangle +(13.1468, 21.2979 )
+		(5,1.6)	rectangle  +( 8.4254, 13.6492)
+		(5,1.6)	rectangle  +(9.6225,  15.5885 )
+%		(2,14.2) rectangle +(3.8,3.8)
+;
+ \draw[thick]		(5,1.6) 	rectangle +(13.1468, 21.2979 );
+
+\tikzset{nameSt/.style={anchor=north west,inner sep=0mm}}
+{\scalefont{0.7}
+\draw (1.2,32.675) node[nameSt] {700}		
+%     	   (2.2,16.7) node[nameSt] {16}
+     	   (6.7,21.8979) node[nameSt] {276}
+     	   (6.7,16.7) node[nameSt] {150}
+     	   (6.7,14.3492) node[nameSt] {115};
+}
+
+\end{tikzpicture}

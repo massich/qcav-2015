@@ -1,0 +1,37 @@
+
+\begin{tikzpicture}[scale=.5]
+\def\sqHalfsize{.4}
+\def\pcolor{black}
+%\newcounter{ii}
+\setcounter{ii}{1}
+
+% Draw the possibilities
+\foreach \a in {0,1}  \foreach \b  in {0,1}  \foreach \c in {0,1} \foreach \d in {0,1} {
+\ifthenelse{ 1 = \a }{\draw[pattern=north east lines, pattern color=\pcolor] (\value{ii},0) rectangle +(-\sqHalfsize,\sqHalfsize);}{ \draw[] (\value{ii},0) rectangle +(-\sqHalfsize,\sqHalfsize);}
+\ifthenelse{ 1 = \b }{\draw[pattern=north east lines, pattern color=\pcolor] (\value{ii},0) rectangle +(\sqHalfsize,\sqHalfsize);}{ \draw[] (\value{ii},0) rectangle +(\sqHalfsize,\sqHalfsize);}
+\ifthenelse{ 1 = \c }{\draw[pattern=north east lines, pattern color=\pcolor] (\value{ii},0) rectangle +(-\sqHalfsize,-\sqHalfsize);}{ \draw[] (\value{ii},0) rectangle +(-\sqHalfsize,-\sqHalfsize);}
+\ifthenelse{ 1 = \d }{\draw[pattern=north east lines, pattern color=\pcolor] (\value{ii},0) rectangle +(\sqHalfsize,-\sqHalfsize);}{ \draw[] (\value{ii},0) rectangle +(\sqHalfsize,-\sqHalfsize);}
+
+%\node[] at (\value{i},-1) {$\arabic{i}$};
+\stepcounter{ii} 
+}
+
+% Draw the axes
+\draw (0.2,.8) -- (17,.8) node [anchor=north west] {$W$};
+\draw[->]	   (0.2,.8) -- (.2, 5) node [anchor=north east] {$U(\omega)$};
+
+% Draw the costs
+\def\costs{2/2, 1/3 , 2/3 , 1/2 ,2/3 ,1/1 ,2/3 ,1/3 ,2/3 ,2/3 ,3/1 ,2/3 ,3/2 ,2/3 ,3/3 ,2/2 }
+\foreach \dataX/\smoothX [count=\idx] in \costs
+{
+	\def\smooth{.5*\smoothX}
+	\def\data{.5*\dataX}
+	\draw[color=blue] (\idx,.8) -- (\idx,{.8+\smooth})  ({\idx - 0.2},{.8+\smooth}) -- ({\idx + 0.2},{.8+\smooth});
+	\draw[color=red,-o] (\idx,{.8+\smooth}) -- (\idx,{.8+\smooth+\data});
+}
+{\scalefont{.8}
+\draw (12,0) node (ref) {};
+\draw [color=red] (17,5) node[anchor=north east,color=black] (dlabel) {\emph{data term cost}} (dlabel.west) -- (dlabel.west -| ref);
+\draw [color=blue](dlabel.south east) ++(0,.2) node[anchor=north east,color=black] (slabel) {\emph{smoothing term cost}} (slabel.west) -- (slabel.west -| ref);
+}
+\end{tikzpicture} 

@@ -1,0 +1,2639 @@
+\graphicspath{{chapters/method/figures/}}
+
+\subsection{Optimization frameworks}
+\begin{frame}\frametitle{Optimization frameworks}
+\begin{table}
+%\label{table:ACM-ML}
+\begin{scriptsize}
+\begin{tabular}{ll c ccc}
+    
+             						&                    	& ML+MRF & \multicolumn{3}{c}{ACM} \\ \cmidrule{4-6}
+             						&                    	&	       			 & Snakes 	& LevelSets 	&   ACWE \\ \toprule
+    Spatially  				& continuous	&        			 & \ch 			& \ch 				&      \ch       \\ \cmidrule{2-6}
+             						& discrete 		& \ch    		 &    	 			&     					&  \\ \midrule
+    \multicolumn{2}{l}{Contour control or modeling} & 		& \ch 	&  \ch 	&   \ch       \\ \midrule
+    \multicolumn{2}{l}{Data model} & {\color{red} \textbf{\ch}}    &     &   &  \\ \midrule
+    \multicolumn{2}{l}{Need of initialization} & &\ch    &\ch    &  \\ \midrule
+    \multicolumn{2}{l}{Topology changes} &\ch & &\ch &\ch   \\ 
+    \bottomrule
+\end{tabular}
+\caption{Optimization methods characteristics}
+\end{scriptsize}
+\end{table}
+\end{frame}
+
+\subsection{Discrete optimization framework: general view}
+\begin{frame}\frametitle{Labeling problem and system outline}
+\vspace{-5pt}
+\begin{footnotesize}
+\begin{small}
+\begin{block}{Labeling problem formulation}
+\begin{equation*}
+U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V_{s,r}(\omega_s,\omega_r)
+\end{equation*} 
+\end{block}
+\end{small}
+%\onslide<1|handout:0>
+\vspace{-5pt}
+\begin{columns}
+\begin{column}{.48\textwidth}
+\begin{itemize}
+\item $\mathcal{S},\mathcal{L}, \mathcal{W}$
+\item $\omega \in W \text{\, {\scriptsize where } \,} \omega_s = l \in \mathcal{L}$
+\end{itemize}
+\end{column}
+\begin{column}{.48\textwidth}
+\begin{itemize}
+\item $D_s(\cdot)$
+\item $\sum_{r \in \mathcal{N}_{s}} V_{s,r}(\cdot,\cdot)$,
+\end{itemize}
+\end{column}
+\end{columns}
+\end{footnotesize}
+%\vspace{-10pt}
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+%\input{chapters/method/figures/toy.tex}
+\includegraphics[height=.4\textheight]{toy.pdf}
+\end{scriptsize}
+\caption{ Toy example illustrating the data and pairwise costs of the solution space $\mathcal{W}$ .}
+\label{fig:toyFigure}
+\end{figure}
+
+%\onslide<2|handout:0>
+%\vspace{-20pt}
+%\begin{figure}[htbp]
+%\centering
+%\begin{scriptsize}
+%\input{chapters/method/figures/OptimizationFramework.tex}
+%\end{scriptsize}
+%\caption{Conceptual representation of the optimization framework proposed for segmenting breast lesions in \ac{us} data.}
+%\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Labeling problem and system outline}
+\vspace{-5pt}
+\begin{small}
+\begin{block}{Labeling problem formulation}
+\begin{equation*}
+U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V_{s,r}(\omega_s,\omega_r)
+\end{equation*} 
+\end{block}
+\end{small}
+\vspace{-5pt}
+\begin{figure}[htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{scriptsize}
+\input{chapters/method/figures/OptimizationFramework.tex}
+\end{scriptsize}
+\caption{Conceptual representation of the optimization framework proposed for segmenting breast lesions in \ac{us} data.}
+\end{figure}
+\end{frame}
+
+
+
+\subsection{Elements within the proposed optimization framework}
+\begin{frame}\frametitle{\tikz[baseline=(b),inner sep=1.5pt]{\coordinate (b) at (0,3pt); \node[anchor=base] {\includegraphics[height=15pt]{SAspixels}};}~Image partition (super-pixel technique)} 
+\begin{figure}[htbp]
+\centering
+\includegraphics[trim=0 0 0 120, clip, width=1\textwidth]{spixelsReview}
+\caption{{\tiny
+Visual comparison of super pixels produced by different methods\footnotemark[1]. From left to right: 
+graph-based,
+normalized cut,
+Turbopixels,
+Quick-shift,
+compact global optimization,
+constant-intensity global optimization,
+and \acs{slic}.}}
+\end{figure}
+\vspace{-15pt}
+\begin{itemize}
+\item  \acf{qs}\footnotemark[2].
+\item \acf{gpb}\footnotemark[3] based super-pixel. %\tikz[baseline,inner sep=1.5pt] \node[anchor=base] {\includegraphics[height=15pt]{SAspixels}};
+\end{itemize}
+\vspace{5pt}
+
+\footnotetext[1]{\fullcite{veksler2010superpixels}}
+\footnotetext[2]{\fullcite{vedaldi2008quick}}
+\footnotetext[3]{\fullcite{arbelaez2011contour}}
+\end{frame}
+
+%\begin{frame}\frametitle{Image partition}
+%\begin{itemize}
+%\item Mode seeker super-pixels
+%		\begin{itemize}
+%		\item \ac{qs}\footnotemark[1] (\emph{Mean-Shift\footnotemark[2] based method}).
+%		
+%		\item \acf{slic}\footnotemark[3].
+%		\end{itemize}
+%\item \acf{gpb}\footnotemark[4] based super-pixel.
+%\end{itemize}
+%\footnotetext[1]{\fullcite{vedaldi2008quick}}
+%\footnotetext[2]{\fullcite{comaniciu2002mean}}
+%\footnotetext[3]{\fullcite{veksler2010superpixels}}
+%\footnotetext[4]{\fullcite{arbelaez2011contour}}
+%\end{frame}
+
+\begin{frame}{Quick-Shift superpixel example}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[trim = 95 300 100 242, clip,width=.48\textwidth]{quickShift/6a.pdf}\,
+\includegraphics[trim = 95 300 100 242, clip,width=.48\textwidth]{quickShift/6b.pdf}
+\caption{Qualitative analysis of \acf{qs} based superpixels. Left column represents the original image, while the right column's overlay in white shows the superpixels' boundaries.}
+\label{fig:quickShiftBUS}
+\end{figure}
+\end{frame}
+
+\begin{frame}{\acf{gpb} superpixel example}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[height=.28\textwidth]{gpb/000032.png}\,
+\includegraphics[height=.28\textwidth]{gpb/000032_ucm.png}\,
+\includegraphics[height=.28\textwidth]{gpb/14gpbTh.png}
+\caption{Qualitative analysis of using \acs{gpb}. From left to right: original image, \acs{gpb}, \acs{gpb}-superpixels obtained at different threshold levels.}
+\label{fig:gpbExample}
+\end{figure}
+\end{frame}
+
+%\subsection{Data term}
+\begin{frame}\frametitle{Superpixels description based on Stavros criteria}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item<1-> Superpixel brightness: $\text{B}_\mu$ and $\text{B}_{Md}$ descriptor.
+		\item<1-> Superpixel overall appearance distance to the appearance of the tissue models.
+
+		\item<2-> Superpixel \ac{bof} representation from a 36 words dictionary of \ac{sift}.
+
+		\item<3-> Atlas information.		
+
+		\item<4-> Superpixel multi-resolution feature description:
+		\onslide<4>
+		\setbeamertemplate{itemize items}[triangle]
+						\begin{itemize}
+						\item Brightness, $\text{B}_\mu$
+						\item Brightness, $\text{B}_{Md}$
+						\item \ac{bof}-\ac{sift}					
+						\end{itemize}	
+		\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Superpixel brightness: $\text{B}_\mu$ and $\text{B}_{Md}$ descriptor}
+\begin{scriptsize}
+\vspace{-10pt}
+\begin{equation*}
+\text{B}_\mu = abs\bigg(\mu\Big(I(s)\Big)\,-\Big<\min\Big(I( \mathcal{S})\Big),\,\max\Big(I( \mathcal{S})\Big),\,\mu\Big(I( \mathcal{S})\Big),\,Md\Big(I( \mathcal{S})\Big)\Big>\bigg)
+\end{equation*}
+\begin{equation*}
+\text{B}_{Md}=abs\bigg(Md\Big(I(s)\Big)\,-\Big<\min\Big(I( \mathcal{S})\Big),\,\max\Big(I( \mathcal{S})\Big),\,\mu\Big(I( \mathcal{S})\Big),\,Md\Big(I( \mathcal{S})\Big)\Big>\bigg) 
+\end{equation*}
+\end{scriptsize}
+\vspace{-5pt}
+\begin{figure}[Htbp]
+\centering
+ \includegraphics[trim = 91 300 100 242, clip,height=.5\textheight]{brightnessAparence/appearance1.pdf}
+ \includegraphics[height=.5\textheight]{appearance1Mod.pdf}
+
+%\input{chapters/method/figures/appearance1.tex}
+\caption{Brightness appearance feature based on comparing superpixel and image statistics (Quick-shift).}
+%\label{fig:brightnessSignatures}
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Overall appearance model distance}\scriptsize
+\vspace{-10pt}
+\begin{columns}
+\begin{column}{.49\textwidth}
+\begin{block}{\acf{mad}}
+\vspace{-10pt}
+\begin{equation*}
+\text{MAD}^c_i = \frac{Md \Big ( \Big |\text{hist}_i(s) -  \overbrace{Md \big (\text{hist}_i(s) \big )}^{\text{ctr}^c_i} \Big | 
+ \Big)} {\underbrace{\sum\nolimits_{i=1}^n \text{MAD}^c_i}_{\text{normalization}}}
+\end{equation*}
+\end{block}
+\vspace{-10pt}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\textwidth]{madModels.pdf}
+\caption{{\tiny Tissue models generation from GT labels.}}
+\end{figure}
+
+\end{column}
+\begin{column}{.52\textwidth}
+\begin{block}{Feature generation}
+\vspace{-10pt}
+\begin{align*}
+\bar{x}_s & = < x^1_s,\dotsc,x^{|C|}_s > \\
+x_s^c & = \chi^2_{\text{dist.}} \left( 
+\frac{|\text{hist}(s) - \text{ctr}^c |}{\sum\nolimits_{i=1}^n |\text{hist}_i(s) - \text{ctr}^c |},\text{MAD}^c
+\right )
+\end{align*}
+\end{block}
+\vspace{-10pt}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{madModelsDistance}
+\caption{ Intuitive idea of the feature generation from the appearance models.}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{\acf{bof}\footnotemark[1] of \acf{sift}\footnotemark[2] texture description}
+\centering
+\begin{tikzpicture}[xscale=2.1,yscale=2.8]
+
+\def\trainingSamples{0.17/0.76/2,  0.14/0.62/2,  0.23/0.63/2,  0.25/0.77/2,  0.11/0.68/2,  0.25/0.68/2,  0.16/0.68/2,  0.72/0.55/1,  0.68/0.46/1,  0.74/0.39/1,  0.82/0.53/1,  0.75/0.64/1,  0.81/0.40/1,  0.46/0.28/3,  0.33/0.28/3,  0.22/0.17/3,  0.22/0.24/3,  0.28/0.10/3,  0.31/0.19/3,  0.51/0.16/3,  0.37/0.12/3,  0.42/0.20/3,  0.49/0.24/3,  0.19/0.54/2,  0.31/0.58/2,  0.41/0.67/2,  0.35/0.75/2,  0.32/0.67/2,  0.28/0.85/2,  0.67/0.55/1,  0.70/0.63/1,  0.78/0.54/1,  0.66/0.36/1,  0.63/0.21/3,  0.70/0.29/1,  0.74/0.21/1,  0.62/0.46/1,  0.40/0.27/3,  0.39/0.17/3,  0.32/0.24/3}
+\def\testSamples{0.14/0.71,  0.24/0.79,  0.23/0.60,  0.13/0.61,  0.11/0.49,  0.38/0.69,  0.27/0.71,  0.16/0.86,  0.06/0.67,  0.17/0.54,  0.33/0.79,  0.36/0.55,  0.92/0.65,  0.81/0.47,  0.30/0.28,  0.19/0.18,  0.40/0.12,  0.52/0.23,  0.23/0.10,  0.37/0.27 }
+
+\def\blockSpace{.15}
+
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=north,text width=3cm, align=center}}
+\tikzset{lineTextNode/.style={bend left,anchor=south,text width=4cm, align=center}}
+
+
+%\draw [help lines,step=.2] (-.5,-.5) grid (5,1.5);
+%\draw [step=1] (-.5,-.5) grid (5,1.5);
+
+\foreach \x/\y/\classID in \trainingSamples
+ \draw (\x,\y) node[trainingMarker]{};
+ 
+\foreach \x/\y/\classID in \trainingSamples {
+	\ifthenelse{\classID = 1}
+		{ \draw (1+\blockSpace+\x,\y) node[fill,classAMarker]{};}
+		{\ifthenelse{\classID = 2}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classBMarker]{};}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classCMarker]{};}
+		}
+}
+
+\foreach \x/\y in \testSamples
+ \draw (2+2*\blockSpace+\x,\y) node[testMarker]{};
+
+\draw 	(1+\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(1+\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(1+\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\draw 	(2+2*\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(2+2*\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(2+2*\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\begin{scriptsize}
+\draw 	(.5,0)	node[textNode]{Local features of training images}
+			(1.5+\blockSpace,0) node[textNode]{Clustered training \\ features}
+			(2.5+2*\blockSpace,0) node[textNode]{Local features \\ word assignment }
+			(3.5+3*\blockSpace,0) node[textNode]{Normalized Bag-of-Features (BoF) }
+			;
+			
+\path[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick] 
+                    (.9,.85) edge [lineTextNode]	node{Generate the \\ dictionary} +(.2+\blockSpace,0)
+                    (1.9+\blockSpace,.85) edge [lineTextNode]	node{Keyword \\ assignation} +(.2+\blockSpace,0)
+                    (2.9+2*\blockSpace,.85) edge [lineTextNode]	node{Feature \\ generation} +(.2+\blockSpace,0)
+                    ;
+\end{scriptsize}
+
+\draw (3.1+4*\blockSpace,.3) node[] (HistOrigin){};
+
+\draw[->,>=stealth',shorten >=1pt,auto] (HistOrigin) +(-0.05,0) -- ++(-0.05,.6);
+
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.48);
+\draw[-o,shorten >=1pt,auto] (HistOrigin)  +(.1,0) --	 +(.1,.5);
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.08);
+\draw[-o,shorten >=1pt,auto] (HistOrigin)  +(.3,0) --	 +(.3,.1);
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.24);
+\draw[-o,shorten >=1pt,auto] (HistOrigin)  +(.5,0) --  +(.5,.26);
+  
+
+\begin{tiny}
+\draw (HistOrigin) ++ (.1,-.045) node [draw,classBMarker,fill=white,anchor=center]{}
+			(HistOrigin) ++(.31,-.02) node [draw,classAMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(.5,-.065) node [draw,classCMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(-0.1,.08) node [anchor=east,inner sep=0pt]{$2$}
+			(HistOrigin) ++(-0.1,.24) node [anchor=east,inner sep=0pt]{$6$}
+			(HistOrigin) ++(-0.1,.48) node [anchor=east,inner sep=0pt]{$12$}
+			(HistOrigin) ++(0,.55) node [anchor=south west,inner sep=0pt] (histName){word  occurrences}			
+			;
+\draw[] (HistOrigin) +(-0.05,0)  --(HistOrigin -| histName.east);			
+
+\draw 	(3+3*\blockSpace,.08)	node[ anchor=south west, align=center] (A) {Final feature}	
+			node [draw,right=6pt of A,inner sep=0pt,minimum size=10pt] (B) {$.6$}
+			node [draw,right=-.5pt of B ,inner sep=0pt,minimum size=10pt] (C) {$.1$}
+			node [draw,right=-.5pt of C ,inner sep=0pt,minimum size=10pt] (D) {$.3$}
+			;
+
+\end{tiny}
+\end{tikzpicture}
+\vspace{-5pt}
+\center
+\begin{tikzpicture}
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt,anchor=center,fill}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=west}}
+
+\def\spaceDist{10pt}
+\def\spaceTokenDist{3pt}
+\begin{tiny}
+\draw   node [ trainingMarker ] (A) {}  
+            node [right=\spaceTokenDist of A,textNode] (An) {Training local feature}
+            node [right= \spaceDist of An, classAMarker ] (B) {}    
+            node [right=\spaceTokenDist of B,textNode] (Bn) {Class A}
+            node [right=\spaceDist of Bn, classBMarker ] (C) {} 
+            node [right=\spaceTokenDist of C,textNode] (Cn) {Class B}
+            node [right=\spaceDist of Cn, classCMarker ] (D) {} 
+            node [right=\spaceTokenDist of D,textNode] (Dn) {Class C}
+            node [right=\spaceDist of Dn, testMarker ] (E) {}   
+            node [right=\spaceTokenDist of E,textNode] (En) {Testing local feature}
+            node[draw,fit=(A) (En)]{}
+            ;
+\end{tiny}          
+
+\end{tikzpicture}
+\footnotetext[1]{Also referred as \acf{bow}}
+\footnotetext[2]{\fullcite{lowe2004distinctive}}
+\end{frame}
+
+\begin{frame}\frametitle{\acs{bof}-\acs{sift} texture description}\tiny
+\centering
+\begin{tikzpicture}[xscale=2,yscale=1.5]
+
+\def\trainingSamples{0.17/0.76/2,  0.14/0.62/2,  0.23/0.63/2,  0.25/0.77/2,  0.11/0.68/2,  0.25/0.68/2,  0.16/0.68/2,  0.72/0.55/1,  0.68/0.46/1,  0.74/0.39/1,  0.82/0.53/1,  0.75/0.64/1,  0.81/0.40/1,  0.46/0.28/3,  0.33/0.28/3,  0.22/0.17/3,  0.22/0.24/3,  0.28/0.10/3,  0.31/0.19/3,  0.51/0.16/3,  0.37/0.12/3,  0.42/0.20/3,  0.49/0.24/3,  0.19/0.54/2,  0.31/0.58/2,  0.41/0.67/2,  0.35/0.75/2,  0.32/0.67/2,  0.28/0.85/2,  0.67/0.55/1,  0.70/0.63/1,  0.78/0.54/1,  0.66/0.36/1,  0.63/0.21/3,  0.70/0.29/1,  0.74/0.21/1,  0.62/0.46/1,  0.40/0.27/3,  0.39/0.17/3,  0.32/0.24/3}
+\def\testSamples{0.14/0.71,  0.24/0.79,  0.23/0.60,  0.13/0.61,  0.11/0.49,  0.38/0.69,  0.27/0.71,  0.16/0.86,  0.06/0.67,  0.17/0.54,  0.33/0.79,  0.36/0.55,  0.92/0.65,  0.81/0.47,  0.30/0.28,  0.19/0.18,  0.40/0.12,  0.52/0.23,  0.23/0.10,  0.37/0.27 }
+
+\def\blockSpace{.15}
+
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=north,text width=3cm, align=center}}
+\tikzset{lineTextNode/.style={bend left,anchor=south,text width=4cm, align=center}}
+
+
+%\draw [help lines,step=.2] (-.5,-.5) grid (5,1.5);
+%\draw [step=1] (-.5,-.5) grid (5,1.5);
+
+\foreach \x/\y/\classID in \trainingSamples
+ \draw (\x,\y) node[trainingMarker]{};
+ 
+\foreach \x/\y/\classID in \trainingSamples {
+	\ifthenelse{\classID = 1}
+		{ \draw (1+\blockSpace+\x,\y) node[fill,classAMarker]{};}
+		{\ifthenelse{\classID = 2}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classBMarker]{};}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classCMarker]{};}
+		}
+}
+
+\foreach \x/\y in \testSamples
+ \draw (2+2*\blockSpace+\x,\y) node[testMarker]{};
+
+\draw 	(1+\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(1+\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(1+\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\draw 	(2+2*\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(2+2*\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(2+2*\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\begin{tiny}
+\draw 	(.5,0)	node[textNode]{Local features of training images}
+			(1.5+\blockSpace,0) node[textNode]{Clustered training \\ features}
+			(2.5+2*\blockSpace,0) node[textNode]{Local features \\ word assignment}
+			(3.5+3*\blockSpace,0) node[textNode]{Normalized Bag-of-Features (BoF) }
+			;
+			
+\path[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick] 
+                    (.9,.85) edge [lineTextNode]	node{Generate the \\ dictionary} +(.2+\blockSpace,0)
+                    (1.9+\blockSpace,.85) edge [lineTextNode]	node{Keyword \\ assignation} +(.2+\blockSpace,0)
+                    (2.9+2*\blockSpace,.85) edge [lineTextNode]	node{Feature \\ generation} +(.2+\blockSpace,0)
+                    ;
+\end{tiny}
+
+\draw (3.1+4*\blockSpace,.2) node[] (HistOrigin){};
+
+\draw[->,>=stealth',shorten >=1pt,auto] (HistOrigin) +(-0.05,0) -- ++(-0.05,.6);
+
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.48);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.1,0) --	 +(.1,.5);
+\fill[white,draw=black] (HistOrigin)  +(.1,.5) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.08);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.3,0) --	 +(.3,.1);
+\fill[white,draw=black] (HistOrigin)  +(.3,.1) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.24);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.5,0) --  +(.5,.26);
+\fill[white,draw=black] (HistOrigin)  +(.5,.26) circle[radius=.8pt];
+  
+
+\begin{tiny}
+\draw (HistOrigin) ++ (.1,-.06) node [draw,classBMarker,fill=white,anchor=center]{}
+			(HistOrigin) ++(.30,-.02) node [draw,classAMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(.5,-.12) node [draw,classCMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(-0.1,.08) node [anchor=east,inner sep=0pt]{$2$}
+			(HistOrigin) ++(-0.1,.24) node [anchor=east,inner sep=0pt]{$6$}
+			(HistOrigin) ++(-0.1,.48) node [anchor=east,inner sep=0pt]{$12$}
+			(HistOrigin) ++(0,.55) node [anchor=south west,inner sep=0pt] (histName){word  occ.}			
+			;
+\draw[] (HistOrigin) +(-0.05,0)  -- ++(.6,0);			
+
+%\draw 	(3+3*\blockSpace,.08)	node[ anchor= west, align=center] (A) {Final feature}	
+%			node [draw,right=6pt of A,inner sep=0pt,minimum size=10pt] (B) {$.6$}
+%			node [draw,right=-.5pt of B ,inner sep=0pt,minimum size=10pt] (C) {$.1$}
+%			node [draw,right=-.5pt of C ,inner sep=0pt,minimum size=10pt] (D) {$.3$}
+%			;
+
+\end{tiny}
+\end{tikzpicture}
+\vspace{-5pt}
+\begin{columns}
+\begin{column}{.3\textwidth}\normalsize
+\vspace{-20pt}
+\begin{itemize}
+\item Sparse grid keypoints
+\item 128 elements feature
+\end{itemize}
+\end{column}
+\begin{column}{.7\textwidth}
+\begin{figure}[htbp]
+\setlength{\abovecaptionskip}{0pt}
+\centering
+\includegraphics[trim = 125 548 126 80, clip,height=.3\textheight]{sift.pdf} \qquad
+\tikz[baseline=(b),inner sep=0pt]{\coordinate (b) at (0,-10pt); \node[anchor=base] {\includegraphics[trim = 0 661 661 0, clip,height=.243\textheight]{dictionaryImage.png}};}
+\caption{{\tiny Left and center: \acf{sift} descriptor illustration\footnotemark[1]. Right: full \ac{sift} descriptor expressed as a set of 128 colored elements.}}
+\end{figure}
+\end{column}
+\end{columns}
+\footnotetext[1]{\fullcite{lowe2004distinctive}}
+\end{frame}
+
+\begin{frame}\frametitle{\acs{bof}-\acs{sift} texture description}\tiny
+\centering
+\begin{tikzpicture}[xscale=2,yscale=1.5]
+
+\def\trainingSamples{0.17/0.76/2,  0.14/0.62/2,  0.23/0.63/2,  0.25/0.77/2,  0.11/0.68/2,  0.25/0.68/2,  0.16/0.68/2,  0.72/0.55/1,  0.68/0.46/1,  0.74/0.39/1,  0.82/0.53/1,  0.75/0.64/1,  0.81/0.40/1,  0.46/0.28/3,  0.33/0.28/3,  0.22/0.17/3,  0.22/0.24/3,  0.28/0.10/3,  0.31/0.19/3,  0.51/0.16/3,  0.37/0.12/3,  0.42/0.20/3,  0.49/0.24/3,  0.19/0.54/2,  0.31/0.58/2,  0.41/0.67/2,  0.35/0.75/2,  0.32/0.67/2,  0.28/0.85/2,  0.67/0.55/1,  0.70/0.63/1,  0.78/0.54/1,  0.66/0.36/1,  0.63/0.21/3,  0.70/0.29/1,  0.74/0.21/1,  0.62/0.46/1,  0.40/0.27/3,  0.39/0.17/3,  0.32/0.24/3}
+\def\testSamples{0.14/0.71,  0.24/0.79,  0.23/0.60,  0.13/0.61,  0.11/0.49,  0.38/0.69,  0.27/0.71,  0.16/0.86,  0.06/0.67,  0.17/0.54,  0.33/0.79,  0.36/0.55,  0.92/0.65,  0.81/0.47,  0.30/0.28,  0.19/0.18,  0.40/0.12,  0.52/0.23,  0.23/0.10,  0.37/0.27 }
+
+\def\blockSpace{.15}
+
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=north,text width=3cm, align=center}}
+\tikzset{lineTextNode/.style={bend left,anchor=south,text width=4cm, align=center}}
+
+
+%\draw [help lines,step=.2] (-.5,-.5) grid (5,1.5);
+%\draw [step=1] (-.5,-.5) grid (5,1.5);
+
+\foreach \x/\y/\classID in \trainingSamples
+ \draw (\x,\y) node[trainingMarker]{};
+ 
+\foreach \x/\y/\classID in \trainingSamples {
+	\ifthenelse{\classID = 1}
+		{ \draw (1+\blockSpace+\x,\y) node[fill,classAMarker]{};}
+		{\ifthenelse{\classID = 2}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classBMarker]{};}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classCMarker]{};}
+		}
+}
+
+\foreach \x/\y in \testSamples
+ \draw (2+2*\blockSpace+\x,\y) node[testMarker]{};
+
+\draw 	(1+\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(1+\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(1+\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\draw 	(2+2*\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(2+2*\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(2+2*\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\begin{tiny}
+\draw 	(.5,0)	node[textNode]{Local features of training images}
+			(1.5+\blockSpace,0) node[textNode]{Clustered training \\ features}
+			(2.5+2*\blockSpace,0) node[textNode]{Local features \\ word assignment}
+			(3.5+3*\blockSpace,0) node[textNode]{Normalized Bag-of-Features (BoF) }
+			;
+			
+\path[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick] 
+                    (.9,.85) edge [lineTextNode]	node{Generate the \\ dictionary} +(.2+\blockSpace,0)
+                    (1.9+\blockSpace,.85) edge [lineTextNode]	node{Keyword \\ assignation} +(.2+\blockSpace,0)
+                    (2.9+2*\blockSpace,.85) edge [lineTextNode]	node{Feature \\ generation} +(.2+\blockSpace,0)
+                    ;
+\end{tiny}
+
+\draw (3.1+4*\blockSpace,.2) node[] (HistOrigin){};
+
+\draw[->,>=stealth',shorten >=1pt,auto] (HistOrigin) +(-0.05,0) -- ++(-0.05,.6);
+
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.48);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.1,0) --	 +(.1,.5);
+\fill[white,draw=black] (HistOrigin)  +(.1,.5) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.08);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.3,0) --	 +(.3,.1);
+\fill[white,draw=black] (HistOrigin)  +(.3,.1) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.24);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.5,0) --  +(.5,.26);
+\fill[white,draw=black] (HistOrigin)  +(.5,.26) circle[radius=.8pt];
+  
+
+\begin{tiny}
+\draw (HistOrigin) ++ (.1,-.06) node [draw,classBMarker,fill=white,anchor=center]{}
+			(HistOrigin) ++(.30,-.02) node [draw,classAMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(.5,-.12) node [draw,classCMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(-0.1,.08) node [anchor=east,inner sep=0pt]{$2$}
+			(HistOrigin) ++(-0.1,.24) node [anchor=east,inner sep=0pt]{$6$}
+			(HistOrigin) ++(-0.1,.48) node [anchor=east,inner sep=0pt]{$12$}
+			(HistOrigin) ++(0,.55) node [anchor=south west,inner sep=0pt] (histName){word  occ.}			
+			;
+\draw[] (HistOrigin) +(-0.05,0)  -- ++(.6,0);			
+
+%\draw 	(3+3*\blockSpace,.08)	node[ anchor= west, align=center] (A) {Final feature}	
+%			node [draw,right=6pt of A,inner sep=0pt,minimum size=10pt] (B) {$.6$}
+%			node [draw,right=-.5pt of B ,inner sep=0pt,minimum size=10pt] (C) {$.1$}
+%			node [draw,right=-.5pt of C ,inner sep=0pt,minimum size=10pt] (D) {$.3$}
+%			;
+
+\end{tiny}
+\end{tikzpicture}
+\vspace{-10pt}
+\begin{columns}
+\begin{column}{.5\textwidth}
+\begin{figure}[htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[trim = 0 10 0 0, clip,height=.4\textheight]{dictionaryImage.png}};
+\begin{tiny}
+\foreach \name/\id/\x in { F/1/.245,   E/2/0.7675,   D/3/1.29,   C/4/1.8125,   B/5/2.335,   A/6/2.858} {\node [anchor=south] at (\x,3.1) {\id}; \node [anchor=east] at (0,\x) {\name};}
+\end{tiny}
+\end{tikzpicture} 
+\caption{128 dimension space visualization for a dictionary example of 36 words.}
+\end{figure}
+\end{column}
+\begin{column}{.5\textwidth}
+\vspace{7pt}
+\begin{figure}[htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\includegraphics[trim = 125 250 120 250, clip,height=.4\textheight]{siftTexture/clusterDistances2.pdf}
+\caption{ Color labeling (or coding) of the dictionary words.}
+\end{figure}\end{column}
+\end{columns}
+
+
+\end{frame}
+
+\begin{frame}\frametitle{\acs{bof}-\acs{sift} texture description}\tiny
+\centering
+\begin{tikzpicture}[xscale=2,yscale=1.5]
+
+\def\trainingSamples{0.17/0.76/2,  0.14/0.62/2,  0.23/0.63/2,  0.25/0.77/2,  0.11/0.68/2,  0.25/0.68/2,  0.16/0.68/2,  0.72/0.55/1,  0.68/0.46/1,  0.74/0.39/1,  0.82/0.53/1,  0.75/0.64/1,  0.81/0.40/1,  0.46/0.28/3,  0.33/0.28/3,  0.22/0.17/3,  0.22/0.24/3,  0.28/0.10/3,  0.31/0.19/3,  0.51/0.16/3,  0.37/0.12/3,  0.42/0.20/3,  0.49/0.24/3,  0.19/0.54/2,  0.31/0.58/2,  0.41/0.67/2,  0.35/0.75/2,  0.32/0.67/2,  0.28/0.85/2,  0.67/0.55/1,  0.70/0.63/1,  0.78/0.54/1,  0.66/0.36/1,  0.63/0.21/3,  0.70/0.29/1,  0.74/0.21/1,  0.62/0.46/1,  0.40/0.27/3,  0.39/0.17/3,  0.32/0.24/3}
+\def\testSamples{0.14/0.71,  0.24/0.79,  0.23/0.60,  0.13/0.61,  0.11/0.49,  0.38/0.69,  0.27/0.71,  0.16/0.86,  0.06/0.67,  0.17/0.54,  0.33/0.79,  0.36/0.55,  0.92/0.65,  0.81/0.47,  0.30/0.28,  0.19/0.18,  0.40/0.12,  0.52/0.23,  0.23/0.10,  0.37/0.27 }
+
+\def\blockSpace{.15}
+
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=north,text width=3cm, align=center}}
+\tikzset{lineTextNode/.style={bend left,anchor=south,text width=4cm, align=center}}
+
+
+%\draw [help lines,step=.2] (-.5,-.5) grid (5,1.5);
+%\draw [step=1] (-.5,-.5) grid (5,1.5);
+
+\foreach \x/\y/\classID in \trainingSamples
+ \draw (\x,\y) node[trainingMarker]{};
+ 
+\foreach \x/\y/\classID in \trainingSamples {
+	\ifthenelse{\classID = 1}
+		{ \draw (1+\blockSpace+\x,\y) node[fill,classAMarker]{};}
+		{\ifthenelse{\classID = 2}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classBMarker]{};}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classCMarker]{};}
+		}
+}
+
+\foreach \x/\y in \testSamples
+ \draw (2+2*\blockSpace+\x,\y) node[testMarker]{};
+
+\draw 	(1+\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(1+\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(1+\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\draw 	(2+2*\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(2+2*\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(2+2*\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\begin{tiny}
+\draw 	(.5,0)	node[textNode]{Local features of training images}
+			(1.5+\blockSpace,0) node[textNode]{Clustered training \\ features}
+			(2.5+2*\blockSpace,0) node[textNode]{Local features \\ word assignment}
+			(3.5+3*\blockSpace,0) node[textNode]{Normalized Bag-of-Features (BoF) }
+			;
+			
+\path[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick] 
+                    (.9,.85) edge [lineTextNode]	node{Generate the \\ dictionary} +(.2+\blockSpace,0)
+                    (1.9+\blockSpace,.85) edge [lineTextNode]	node{Keyword \\ assignation} +(.2+\blockSpace,0)
+                    (2.9+2*\blockSpace,.85) edge [lineTextNode]	node{Feature \\ generation} +(.2+\blockSpace,0)
+                    ;
+\end{tiny}
+
+\draw (3.1+4*\blockSpace,.2) node[] (HistOrigin){};
+
+\draw[->,>=stealth',shorten >=1pt,auto] (HistOrigin) +(-0.05,0) -- ++(-0.05,.6);
+
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.48);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.1,0) --	 +(.1,.5);
+\fill[white,draw=black] (HistOrigin)  +(.1,.5) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.08);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.3,0) --	 +(.3,.1);
+\fill[white,draw=black] (HistOrigin)  +(.3,.1) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.24);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.5,0) --  +(.5,.26);
+\fill[white,draw=black] (HistOrigin)  +(.5,.26) circle[radius=.8pt];
+  
+
+\begin{tiny}
+\draw (HistOrigin) ++ (.1,-.06) node [draw,classBMarker,fill=white,anchor=center]{}
+			(HistOrigin) ++(.30,-.02) node [draw,classAMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(.5,-.12) node [draw,classCMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(-0.1,.08) node [anchor=east,inner sep=0pt]{$2$}
+			(HistOrigin) ++(-0.1,.24) node [anchor=east,inner sep=0pt]{$6$}
+			(HistOrigin) ++(-0.1,.48) node [anchor=east,inner sep=0pt]{$12$}
+			(HistOrigin) ++(0,.55) node [anchor=south west,inner sep=0pt] (histName){word  occ.}			
+			;
+\draw[] (HistOrigin) +(-0.05,0)  -- ++(.6,0);			
+
+%\draw 	(3+3*\blockSpace,.08)	node[ anchor= west, align=center] (A) {Final feature}	
+%			node [draw,right=6pt of A,inner sep=0pt,minimum size=10pt] (B) {$.6$}
+%			node [draw,right=-.5pt of B ,inner sep=0pt,minimum size=10pt] (C) {$.1$}
+%			node [draw,right=-.5pt of C ,inner sep=0pt,minimum size=10pt] (D) {$.3$}
+%			;
+
+\end{tiny}
+\end{tikzpicture}
+\begin{figure}[htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\includegraphics[height=.45\textheight]{siftTexture/SIFTtexture02.png}
+\includegraphics[height=.45\textheight]{siftTexture/SIFTtexture04.png}
+\caption{\ac{sift} image visualization. Every pixel has been colored with the color label of the nearest word from the dictionary.}
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{\acs{bof}-\acs{sift} texture description}\tiny
+\centering
+\begin{tikzpicture}[xscale=2,yscale=1.5]
+
+\def\trainingSamples{0.17/0.76/2,  0.14/0.62/2,  0.23/0.63/2,  0.25/0.77/2,  0.11/0.68/2,  0.25/0.68/2,  0.16/0.68/2,  0.72/0.55/1,  0.68/0.46/1,  0.74/0.39/1,  0.82/0.53/1,  0.75/0.64/1,  0.81/0.40/1,  0.46/0.28/3,  0.33/0.28/3,  0.22/0.17/3,  0.22/0.24/3,  0.28/0.10/3,  0.31/0.19/3,  0.51/0.16/3,  0.37/0.12/3,  0.42/0.20/3,  0.49/0.24/3,  0.19/0.54/2,  0.31/0.58/2,  0.41/0.67/2,  0.35/0.75/2,  0.32/0.67/2,  0.28/0.85/2,  0.67/0.55/1,  0.70/0.63/1,  0.78/0.54/1,  0.66/0.36/1,  0.63/0.21/3,  0.70/0.29/1,  0.74/0.21/1,  0.62/0.46/1,  0.40/0.27/3,  0.39/0.17/3,  0.32/0.24/3}
+\def\testSamples{0.14/0.71,  0.24/0.79,  0.23/0.60,  0.13/0.61,  0.11/0.49,  0.38/0.69,  0.27/0.71,  0.16/0.86,  0.06/0.67,  0.17/0.54,  0.33/0.79,  0.36/0.55,  0.92/0.65,  0.81/0.47,  0.30/0.28,  0.19/0.18,  0.40/0.12,  0.52/0.23,  0.23/0.10,  0.37/0.27 }
+
+\def\blockSpace{.15}
+
+\tikzset{Marker/.style={inner sep=0pt,minimum size=3pt}}
+\tikzset{classMarker/.style={regular polygon,regular polygon sides=3,Marker,minimum size=4pt}}
+\tikzset{trainingMarker/.style={fill,circle,Marker}}
+\tikzset{testMarker/.style={fill,regular polygon,regular polygon sides=4,Marker,minimum size=4pt,teal}}
+\tikzset{classAMarker/.style={rotate=0,classMarker,red}}
+\tikzset{classBMarker/.style={rotate=-90,classMarker,violet}}
+\tikzset{classCMarker/.style={rotate=180,classMarker,blue}}
+\tikzset{textNode/.style={anchor=north,text width=3cm, align=center}}
+\tikzset{lineTextNode/.style={bend left,anchor=south,text width=4cm, align=center}}
+
+
+%\draw [help lines,step=.2] (-.5,-.5) grid (5,1.5);
+%\draw [step=1] (-.5,-.5) grid (5,1.5);
+
+\foreach \x/\y/\classID in \trainingSamples
+ \draw (\x,\y) node[trainingMarker]{};
+ 
+\foreach \x/\y/\classID in \trainingSamples {
+	\ifthenelse{\classID = 1}
+		{ \draw (1+\blockSpace+\x,\y) node[fill,classAMarker]{};}
+		{\ifthenelse{\classID = 2}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classBMarker]{};}
+			{ \draw (1+\blockSpace+\x,\y) node[fill,classCMarker]{};}
+		}
+}
+
+\foreach \x/\y in \testSamples
+ \draw (2+2*\blockSpace+\x,\y) node[testMarker]{};
+
+\draw 	(1+\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(1+\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(1+\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\draw 	(2+2*\blockSpace+.7225,.4612) node[draw,classAMarker,fill=white]{}
+			(2+2*\blockSpace+.2436,.6823) node[draw,classBMarker,fill=white]{}
+			(2+2*\blockSpace+.3818,.2057) node[draw,classCMarker,fill=white]{};
+
+\begin{tiny}
+\draw 	(.5,0)	node[textNode]{Local features of training images}
+			(1.5+\blockSpace,0) node[textNode]{Clustered training \\ features}
+			(2.5+2*\blockSpace,0) node[textNode]{Local features \\ word assignment}
+			(3.5+3*\blockSpace,0) node[textNode]{Normalized Bag-of-Features (BoF) }
+			;
+			
+\path[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+                    semithick] 
+                    (.9,.85) edge [lineTextNode]	node{Generate the \\ dictionary} +(.2+\blockSpace,0)
+                    (1.9+\blockSpace,.85) edge [lineTextNode]	node{Keyword \\ assignation} +(.2+\blockSpace,0)
+                    (2.9+2*\blockSpace,.85) edge [lineTextNode]	node{Feature \\ generation} +(.2+\blockSpace,0)
+                    ;
+\end{tiny}
+
+\draw (3.1+4*\blockSpace,.2) node[] (HistOrigin){};
+
+\draw[->,>=stealth',shorten >=1pt,auto] (HistOrigin) +(-0.05,0) -- ++(-0.05,.6);
+
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.48);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.1,0) --	 +(.1,.5);
+\fill[white,draw=black] (HistOrigin)  +(.1,.5) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.08);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.3,0) --	 +(.3,.1);
+\fill[white,draw=black] (HistOrigin)  +(.3,.1) circle[radius=.8pt];
+\draw[-|,shorten >=1pt,auto] (HistOrigin)  +(-0.05,0) -- +(-0.05,.24);
+\draw[shorten >=1pt,auto] (HistOrigin)  +(.5,0) --  +(.5,.26);
+\fill[white,draw=black] (HistOrigin)  +(.5,.26) circle[radius=.8pt];
+  
+
+\begin{tiny}
+\draw (HistOrigin) ++ (.1,-.06) node [draw,classBMarker,fill=white,anchor=center]{}
+			(HistOrigin) ++(.30,-.02) node [draw,classAMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(.5,-.12) node [draw,classCMarker,fill=white,anchor=north]{}
+			(HistOrigin) ++(-0.1,.08) node [anchor=east,inner sep=0pt]{$2$}
+			(HistOrigin) ++(-0.1,.24) node [anchor=east,inner sep=0pt]{$6$}
+			(HistOrigin) ++(-0.1,.48) node [anchor=east,inner sep=0pt]{$12$}
+			(HistOrigin) ++(0,.55) node [anchor=south west,inner sep=0pt] (histName){word  occ.}			
+			;
+\draw[] (HistOrigin) +(-0.05,0)  -- ++(.6,0);			
+
+%\draw 	(3+3*\blockSpace,.08)	node[ anchor= west, align=center] (A) {Final feature}	
+%			node [draw,right=6pt of A,inner sep=0pt,minimum size=10pt] (B) {$.6$}
+%			node [draw,right=-.5pt of B ,inner sep=0pt,minimum size=10pt] (C) {$.1$}
+%			node [draw,right=-.5pt of C ,inner sep=0pt,minimum size=10pt] (D) {$.3$}
+%			;
+
+\end{tiny}
+\end{tikzpicture}
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=.4\textheight]{siftTexture/occurrencesSIFT}
+\caption{Illustration of the \ac{bof}-\ac{sift} feature construction by computing the occurrences of each dictionary word within a particular super pixel.}
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Atlas feature}
+\begin{figure}[htbp]
+\centering
+\includegraphics[height=.7\textheight]{lesionDistribution}
+\caption{Illustration of the lesion position distribution.}
+\end{figure}
+\end{frame}
+
+%\begin{frame}\frametitle{General flow to obtain the data term}
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=1\textwidth]{data}
+%\caption{Data term $D_s(\cdot)$ generation}
+%\end{figure}
+%\end{frame}
+
+\begin{frame}\frametitle{Pairwise or smoothing term}
+\vspace{-20pt}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.5\textwidth]{000023}~
+\includegraphics[width=.5\textwidth]{000023gt}
+\caption{Homogeneous nature of the \ac{gt} distribution. Left: original image, right: \ac{gt} label image }
+\end{figure}
+\end{column}
+\begin{column}{.4\textwidth}
+\begin{block}{Pairwise term definition}\scriptsize
+\begin{equation*}
+V_{s,r}(\omega_s,\omega_r) = 
+\begin{cases}
+    \beta, & \text{if } \omega_s \ne \omega_r\\
+    0,              & \text{otherwise}
+\end{cases}
+\label{eq:mrfequation}
+\end{equation*}
+\vspace{8pt}
+\end{block}
+\end{column}
+\end{columns}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.3\textwidth]{MRFHomogeneous}~
+\includegraphics[width=.3\textwidth]{MRFstructure}~
+\includegraphics[width=.3\textwidth]{MRFrand}~
+\caption{Possible labelings $\omega$ within the solution space $\mathcal{W}$}
+\end{figure}
+\end{frame}
+
+
+%\subsection{Cost minimization}
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\vspace{-20pt}
+\begin{figure}
+\setlength{\abovecaptionskip}{2pt}
+\center
+	\begin{tikzpicture}[scale=1.63]%[y=0.080pt, x=0.08pt,yscale=1, inner sep=0pt, outer sep=0pt]
+	\fill 		(1.2,1.835) circle[fill=red,radius=1.2pt];
+	\draw[dashed] (.1,1.835) -- (3.6,1.835) (1.2,0) -- (1.2,1.835);
+
+	\def\xYellow{.4}
+	\def\xBlue{3.5}
+	\def\xTrueSeg{1.95}
+	\def\xDataSeg{2.79}
+	\def\yIcon{-.05}
+	 \node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[height=5cm]{SApathLong}};
+ 	 \node[anchor=north,inner sep=0] at (\xYellow,\yIcon) {\includegraphics[height=.8cm]{yellow}};
+  	 \node[anchor=north,inner sep=0] at (\xTrueSeg,\yIcon) {\includegraphics[height=.8cm]{trueSeg}};
+ 	 \node[anchor=north,inner sep=0] at (\xBlue,\yIcon) {\includegraphics[height=.8cm]{blue}};	
+ 	 \node[anchor=north,inner sep=0] at (\xDataSeg,\yIcon) {\includegraphics[height=.8cm]{Dataseg}};	  
+	
+	\foreach \x/\ini/\th/\y in {\xYellow/0.08/0.13/2.8, \xBlue/0.1/0.13/2.95, \xTrueSeg/0.085/.5/1.01, \xDataSeg/0.085/1.9/2.152}
+	{\draw (\x,0) -- (\x,.06); \draw[blue, -|] (\x,\ini) -- (\x,\th); \draw[red, -o] (\x,\th) -- (\x,\y);}
+	
+	\begin{tiny}
+		\draw
+			   (0,1.835)node[anchor=east]{$U(\omega^{k})$}
+			   (1.2,0) node[anchor=north] {$\omega^{k}$}
+		;
+	\end{tiny}	
+						
+	\begin{scriptsize}
+		\draw (0,3) node[anchor=east] {$U(\omega)$}
+			   (3.8,0.2) node[anchor=north west] {$\mathcal{W}$}
+	   	;
+	\end{scriptsize}
+	\end{tikzpicture}
+	\caption {{\scriptsize Toy example for a solution space of 20 sites 7 possible labels $|\mathcal{W}|= 7^{20} \sim 8 \cdot 10^{16}$}}
+	\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item  \acf{icm}		
+		\item  \acf{sa}
+		\item <.|handout:0> \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+%\draw [very thick]    (d) to[out=20,in=-20, distance=20pt ] (b)
+%						  (b) to[out=150,in=-150, distance=20pt ] (f)
+%						  (a)  -- (c);
+
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$}
+			(sourcenode) ++ (0,10pt) node[anchor=north east,inner sep=0pt] (lesionLabel) {\scriptsize lesion}
+			(lesionLabel -| sink) node[anchor=west,inner sep=0pt] {\scriptsize $\overline{\text{lesion}}$}% $D(\omega_s = lesion)$}
+%			(source node) ++ (-0,-5pt) node[anchor=north west] {$D(\omega_s = {\text{lesion}})$}
+			;
+ 
+ 
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption{Nodes forming the graph for \ac{gc} minimization procedure.}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+
+
+\foreach \n in {a,b,c,d,e,f,g} {
+\draw  (sourcenode) -- (\n) --(sink);
+}
+\draw (d) ++(-14pt,-12pt) node[anchor=east] {\footnotesize $D(\omega_s=\text{lesion})$}
+	  (d) ++(18pt,-12pt)node[anchor=west] {\footnotesize $D(\omega_s=\overline{\text{lesion}})$}
+	  ;
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$}
+			(sourcenode) ++ (0,10pt) node[anchor=north east,inner sep=0pt] (lesionLabel) {\scriptsize lesion}
+			(lesionLabel -| sink) node[anchor=west,inner sep=0pt] {\scriptsize $\overline{\text{lesion}}$}
+					;
+ 
+ 
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption{Graph links associated with the data term $D(\cdot)$ cost for \ac{gc} minimization procedure.}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+
+
+\foreach \n in {b, d, f} {
+\draw  [line width=2.5pt,black] (sourcenode) -- (\n);
+\draw  [line width=2pt,white] (sourcenode) -- (\n);
+}
+\foreach \n in {a, c, e,g} {
+\draw  [line width=4.5pt,black] (sourcenode) -- (\n);
+\draw  [line width=4pt,white] (sourcenode) -- (\n);
+}
+\foreach \n in {a, c, e,g} {
+\draw  [line width=2.5pt,black] (sink) -- (\n);
+\draw  [line width=2pt,white] (sink) -- (\n);
+}
+
+\foreach \n in {b, d, f} {
+\draw  [line width=4.5pt,black] (sink) -- (\n);
+\draw  [line width=4pt,white] (sink) -- (\n);
+}
+
+\draw (d) ++(-14pt,-12pt) node[anchor=east] {\footnotesize $D(\omega_s=\text{lesion})$}
+	  (d) ++(18pt,-12pt)node[anchor=west] {\footnotesize $D(\omega_s=\overline{\text{lesion}})$}
+	  ;
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$}
+			(sourcenode) ++ (0,10pt) node[anchor=north east,inner sep=0pt] (lesionLabel) {\scriptsize lesion}
+			(lesionLabel -| sink) node[anchor=west,inner sep=0pt] {\scriptsize $\overline{\text{lesion}}$}
+					;
+ 
+ 
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption{Graph links associated with the data term $D(\cdot)$ cost for \ac{gc} minimization procedure.}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+
+
+\foreach \n in {b, d, f} {
+\draw  [line width=2.5pt,black] (sourcenode) -- (\n);
+\draw  [line width=2pt,white] (sourcenode) -- (\n);
+}
+\foreach \n in {a, c, e,g} {
+\draw  [line width=4.5pt,black] (sourcenode) -- (\n);
+\draw  [line width=4pt,white] (sourcenode) -- (\n);
+}
+\foreach \n in {a, c, e,g} {
+\draw  [line width=2.5pt,black] (sink) -- (\n);
+\draw  [line width=2pt,white] (sink) -- (\n);
+}
+
+\foreach \n in {b, d, f} {
+\draw  [line width=4.5pt,black] (sink) -- (\n);
+\draw  [line width=4pt,white] (sink) -- (\n);
+}
+
+\foreach \n in {a,b,c,d,e,f,g} {
+\draw  [line width=2pt,orange] (sourcenode) -- (\n) -- (sink);
+}
+
+\draw (d) ++(-14pt,-12pt) node[anchor=east] {\footnotesize $D(\omega_s=\text{lesion})$}
+	  (d) ++(18pt,-12pt)node[anchor=west] {\footnotesize $D(\omega_s=\overline{\text{lesion}})$}
+	  ;
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$}
+			(sourcenode) ++ (0,10pt) node[anchor=north east,inner sep=0pt] (lesionLabel) {\scriptsize lesion}
+			(lesionLabel -| sink) node[anchor=west,inner sep=0pt] {\scriptsize $\overline{\text{lesion}}$}% $D(\omega_s = lesion)$}
+%			(source node) ++ (-0,-5pt) node[anchor=north west] {$D(\omega_s = {\text{lesion}})$}
+			;
+ 
+ 
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption{System flooding to determine the max-flow\,/\,mini-cut.}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+
+
+
+\foreach \n in {a, c, e,g} {
+\draw  [line width=4.5pt,black] (sourcenode) -- (\n);
+\draw  [line width=4pt,white] (sourcenode) -- (\n);
+\draw  [line width=2pt,orange] (sourcenode) -- (\n);
+}
+
+
+\foreach \n in {b, d, f} {
+\draw  [line width=4.5pt,black] (sink) -- (\n);
+\draw  [line width=4pt,white] (sink) -- (\n);
+\draw  [line width=2pt,orange] (sink) -- (\n);
+}
+
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$}
+			(sourcenode) ++ (0,10pt) node[anchor=north east,inner sep=0pt] (lesionLabel) {\scriptsize lesion}
+			(lesionLabel -| sink) node[anchor=west,inner sep=0pt] {\scriptsize $\overline{\text{lesion}}$}% $D(\omega_s = lesion)$}
+%			(source node) ++ (-0,-5pt) node[anchor=north west] {$D(\omega_s = {\text{lesion}})$}
+			;
+ 
+ 
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption {Sites labeling}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Cost minimization}
+\setbeamercovered{transparent}
+\begin{columns}
+\begin{column}{.6\textwidth}
+\begin{figure}
+\centering
+\begin{tikzpicture}[y=0.80pt,x=0.80pt,yscale=-1, inner sep=0pt, outer sep=0pt]
+
+%\draw[help lines,step=10,xshift=556,yshift=318] (-100,-100) grid (100,100);
+%\draw[line width=.6pt,step=100,xshift=556,yshift=318] (-100,-100) grid (100,100);
+
+\def\xoffset{556}
+\def\yoffset{-318}
+
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(cc)		 	at (0,	0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sourcenode) 	at	 (-43,0);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(sink)		at (55,	2)	;
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(a)			at (0.5,	-20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(b) 			at (-.5, 1);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(c)			at (0.5,	20);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(d)			at (0,	-36);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(e) 			at (2,	-68);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(f)			at (0,	39);
+\coordinate	[xshift=\xoffset,yshift=\yoffset] 	(g)			at (3,	70);
+
+
+\draw [thin,gray] 	(sourcenode) -- (a) -- (sink) 
+						(sourcenode) -- (b) -- (sink) 
+						(sourcenode) -- (c) -- (sink)
+						(sourcenode) -- (d) -- (sink) 
+						(sourcenode) -- (e) -- (sink) 
+						(sourcenode) -- (f) -- (sink)
+						(sourcenode) -- (g) -- (sink)  ;
+
+\draw [very thick]    (d) to[out=20,in=-20, distance=20pt ] (b)
+						  (b) to[out=150,in=-150, distance=20pt ] (f)
+						  (a)  -- (c);
+
+
+% path3594
+\path[fill=black] (694.8463,343.9678) .. controls (694.4604,344.7121) and
+  (694.4880,345.2909) .. (695.0117,346.0627) .. controls (695.5630,346.8896) and
+  (696.5552,346.9723) .. (697.3270,346.2005) .. controls (697.8783,345.6492) and
+  (697.8507,345.2082) .. (697.1065,344.0505) .. controls (696.6104,343.2788) and
+  (695.2598,343.2236) .. (694.8463,343.9678) -- cycle;
+
+% path3596
+\path[fill=black] (695.3424,349.7011) .. controls (694.7085,350.0594) and
+  (694.7085,350.6933) .. (695.3976,351.7959) .. controls (695.9488,352.7055) and
+  (696.6930,352.9535) .. (697.2443,352.4023) .. controls (698.0161,351.6305) and
+  (696.2796,349.1773) .. (695.3424,349.7011) -- cycle;
+
+% path3598
+\path[fill=black] (695.3976,359.2380) .. controls (694.4053,359.6239) and
+  (694.3226,360.6989) .. (695.2046,361.9944) .. controls (695.9213,363.0418) and
+  (696.5828,363.1520) .. (697.1616,362.2976) .. controls (697.7956,361.4155) and
+  (697.7129,360.3406) .. (696.9687,359.6515) .. controls (696.3072,359.0175) and
+  (696.1142,358.9624) .. (695.3976,359.2380) -- cycle;
+
+% path3600
+\path[fill=black] (694.3171,374.6711) .. controls (693.9320,374.7919) and
+  (693.2581,375.1783) .. (692.8248,375.5647) .. controls (690.7549,377.4726) and
+  (691.4529,381.3851) .. (694.0283,382.3511) .. controls (695.7613,383.0273) and
+  (698.3366,382.3994) .. (699.6123,381.0228) .. controls (700.5991,379.9843) and
+  (701.6582,377.7624) .. (701.6582,376.7481) .. controls (700.6049,373.8245) and
+  (696.4178,374.2424) .. (694.3171,374.6711) -- cycle;
+
+% path3602
+\path[fill=black] (693.2088,414.8144) .. controls (691.8857,416.0272) and
+  (691.4171,417.6810) .. (691.8857,419.3624) .. controls (692.5472,421.9258) and
+  (693.8703,423.0008) .. (696.2683,423.0008) .. controls (699.0247,423.0008) and
+  (701.2849,421.0437) .. (701.2849,418.6733) .. controls (701.2849,416.6887) and
+  (699.6586,414.7317) .. (698.0324,414.7317) .. controls (697.7292,414.7317) and
+  (697.3433,414.5388) .. (697.1503,414.3183) .. controls (696.9298,414.0426) and
+  (696.3234,413.9048) .. (695.4690,413.9048) .. controls (694.3664,413.9048) and
+  (694.0081,414.0426) .. (693.2088,414.8144) -- cycle;
+
+% path3604
+\path[fill=black] (649.0573,392.4560) .. controls (648.3131,392.5662) and
+  (647.0176,392.7040) .. (646.1907,392.7592) .. controls (644.2888,392.8694) and
+  (643.9305,393.3380) .. (644.6747,394.7989) .. controls (645.1433,395.7636) and
+  (645.1984,396.2322) .. (645.0055,399.4571) .. controls (644.8125,403.5089) and
+  (645.0606,404.6390) .. (646.3285,405.1076) .. controls (647.1003,405.4108) and
+  (653.1092,405.3006) .. (654.5700,404.9698) .. controls (656.0309,404.6390) and
+  (656.5890,404.7731) .. (656.9473,404.4148) .. controls (657.4762,401.7864) and
+  (656.7645,402.0500) .. (657.0232,398.9885) .. controls (657.1335,397.7206) and
+  (657.3540,396.1770) .. (657.5194,395.5431) .. controls (657.8226,394.3303) and
+  (657.5470,393.5861) .. (656.4720,392.4835) .. controls (656.0861,392.0976) and
+  (651.3176,392.0701) .. (649.0574,392.4559) -- cycle;
+
+% path3606
+\path[fill=black] (695.3587,393.7007) .. controls (693.5671,394.0591) and
+  (692.0235,395.9609) .. (691.8582,398.0006) .. controls (691.6928,400.3160) and
+  (693.2363,402.7691) .. (694.8901,402.8518) .. controls (695.3036,402.8794) and
+  (695.8824,402.9069) .. (696.1856,402.9345) .. controls (697.6740,403.0172) and
+  (699.3554,401.6942) .. (699.9067,400.0679) .. controls (700.4028,398.5795) and
+  (699.9067,397.0084) .. (698.5009,395.5475) .. controls (697.8945,394.9135) and
+  (697.2055,394.1969) .. (696.9574,393.9212) .. controls (696.7093,393.6732) and
+  (696.4337,393.4802) .. (696.3510,393.4802) .. controls (696.2683,393.5078) and
+  (695.8273,393.5905) .. (695.3587,393.7007) -- cycle;
+
+% path3608
+\path[fill=black] (742.5925,393.3488) .. controls (742.1239,393.6520) and
+  (741.9188,395.5982) .. (742.3322,399.8430) .. controls (742.5803,402.4615) and
+  (742.6079,403.5916) .. (742.3877,403.8121) .. controls (741.9192,404.2807) and
+  (742.0294,405.7967) .. (742.5807,406.2928) .. controls (743.1871,406.8441) and
+  (743.8211,406.8717) .. (744.6480,406.4307) .. controls (745.0338,406.2102) and
+  (747.0460,406.0448) .. (749.9953,405.9345) .. controls (752.5862,405.8518) and
+  (754.8189,405.7140) .. (754.9291,405.5762) .. controls (755.0394,405.4659) and
+  (755.1221,404.8595) .. (755.0945,404.1980) .. controls (755.0668,403.5641) and
+  (755.0118,401.3038) .. (754.9567,399.1815) .. controls (754.7638,392.5386) and
+  (754.0747,392.0701) .. (746.4947,393.4482) -- (744.1794,393.8617) .. controls
+  (743.6368,393.2766) and (743.1319,392.9794) .. (742.5928,393.3488) -- cycle;
+
+% path3610
+\path[fill=black] (695.7997,463.8775) .. controls (692.8780,465.1178) and
+  (692.3543,469.9414) .. (694.9728,471.8433) .. controls (696.0202,472.6151) and
+  (697.8119,472.5049) .. (699.7689,471.5401) .. controls (701.8361,470.5203) and
+  (702.5804,469.2799) .. (702.1118,467.6812) .. controls (701.6432,466.1101) and
+  (700.2099,464.5665) .. (699.0247,464.3736) .. controls (698.5009,464.3185) and
+  (697.9497,464.1531) .. (697.7843,464.0428) .. controls (697.1779,463.5743) and
+  (696.6266,463.5467) .. (695.7997,463.8775) -- cycle;
+
+% path3612
+\path[fill=black] (694.4767,333.5371) .. controls (691.5549,332.2967) and
+  (691.0312,327.4731) .. (693.6498,325.5712) .. controls (694.6972,324.7994) and
+  (696.4888,324.9097) .. (698.4458,325.8744) .. controls (700.5131,326.8943) and
+  (701.2573,328.1346) .. (700.7887,329.7333) .. controls (700.3202,331.3044) and
+  (698.8868,332.8480) .. (697.7016,333.0409) .. controls (697.1779,333.0960) and
+  (696.6266,333.2615) .. (696.4612,333.3717) .. controls (695.8549,333.8403) and
+  (695.3036,333.8679) .. (694.4767,333.5371) -- cycle;
+
+% path3614
+\path[fill=black] (695.3976,437.7004) .. controls (694.9841,438.0862) and
+  (695.2046,439.9054) .. (695.7283,440.3740) .. controls (696.6379,441.2009) and
+  (697.9610,440.5394) .. (697.9610,439.2715) .. controls (697.9610,438.0862) and
+  (696.1142,436.9561) .. (695.3976,437.7004) -- cycle;
+
+% path3616
+\path[fill=black] (695.9360,446.3871) .. controls (695.0903,446.9041) and
+  (695.5954,449.3853) .. (696.5820,449.2899) .. controls (697.3511,449.2154) and
+  (696.9618,447.6763) .. (696.6423,446.9728) .. controls (696.5159,446.6943) and
+  (696.1970,446.2275) .. (695.9360,446.3871) -- cycle;
+
+% path3618
+\path[fill=black] (696.4442,452.7473) .. controls (694.8596,452.9347) and
+  (694.7933,455.7398) .. (696.3064,455.8999) .. controls (697.2644,455.3606) and
+  (698.6455,453.7932) .. (697.2711,452.9282) .. controls (697.0245,452.7821) and
+  (696.7285,452.7107) .. (696.4442,452.7473) -- cycle;
+
+% path3620
+\path[fill=black] (696.9372,357.0839) .. controls (695.4069,356.8213) and
+  (693.2932,357.1210) .. (692.4824,358.4453) .. controls (691.2829,360.4046) and
+  (691.7653,363.9709) .. (693.6859,365.2316) .. controls (695.2853,366.2816) and
+  (697.9032,365.2422) .. (699.2699,363.9034) .. controls (700.3216,362.8731) and
+  (700.8713,361.0165) .. (700.3803,359.6287) .. controls (699.9042,358.2833) and
+  (698.3438,357.3253) .. (696.9372,357.0839) -- cycle;
+
+% path3622
+\path[fill=black] (695.3424,338.6756) .. controls (694.7085,339.0340) and
+  (694.7085,339.6679) .. (695.3976,340.7705) .. controls (695.9488,341.6801) and
+  (696.6930,341.9281) .. (697.2443,341.3769) .. controls (698.0161,340.6051) and
+  (696.2796,338.1519) .. (695.3424,338.6756) -- cycle;
+
+% path3624
+\path[fill=black] (695.3587,431.9899) .. controls (693.5671,432.3482) and
+  (692.0235,434.2501) .. (691.8582,436.2898) .. controls (691.6928,438.6051) and
+  (693.2363,441.0583) .. (694.8901,441.1410) .. controls (695.3036,441.1686) and
+  (695.8824,441.1961) .. (696.1856,441.2237) .. controls (697.6740,441.3064) and
+  (699.3554,439.9833) .. (699.9067,438.3571) .. controls (700.4028,436.8686) and
+  (699.9067,435.2975) .. (698.5009,433.8367) .. controls (697.8945,433.2027) and
+  (697.2055,432.4860) .. (696.9574,432.2104) .. controls (696.7093,431.9623) and
+  (696.4337,431.7694) .. (696.3510,431.7694) .. controls (696.2683,431.7970) and
+  (695.8273,431.8796) .. (695.3587,431.9899) -- cycle;
+
+% path3626
+\path[fill=black] (695.7835,458.0840) .. controls (695.1495,458.4424) and
+  (695.1495,459.0763) .. (695.8386,460.1789) .. controls (696.3898,461.0885) and
+  (697.1341,461.3365) .. (697.6853,460.7853) .. controls (698.4571,460.0135) and
+  (696.7206,457.5603) .. (695.7835,458.0840) -- cycle;
+  
+  \draw 	(sourcenode) ++ (0,1pt) node[anchor=center,text=white]{$s$}
+			(sink) ++ (0,-1.8pt) node[anchor=center,text=white]{$s'$};
+  
+% \fill[red] (cc) circle[radius=.5pt];
+%\fill[red] (sourcenode) circle[radius=3pt];
+%\fill[red] (sink) circle[radius=3pt];
+%\fill[red] (a) circle[radius=3pt];
+%\fill[red] (b) circle[radius=3pt];
+%\fill[red] (c) circle[radius=3pt];
+%\fill[red] (d) circle[radius=3pt];
+%\fill[red] (e) circle[radius=3pt];
+%\fill[red] (f) circle[radius=3pt];
+%\fill[red] (g) circle[radius=3pt];
+\end{tikzpicture}  
+\caption{Full graph example}
+\end{figure}
+\end{column}
+\begin{column}{1cm}
+\end{column}
+\begin{column}{.4\textwidth}
+\setbeamercovered{transparent}
+		\begin{itemize}
+		\item <.>\acf{icm}		
+		\item <.>\acf{sa}
+		\item  \acf{gc}
+		\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\subsection{Experiment setup}
+\begin{frame}\frametitle{Collected and catalogued  database}
+\begin{columns}
+\begin{column}{.4\textwidth}
+\begin{figure}
+\centering
+\input{chapters/method/figures/bbdd_sets.tex}
+\caption{Dataset sizes and relation}
+\end{figure}
+\end{column}
+\begin{column}{.6\textwidth}
+ \emph{UDIAT Diagnostic Centre of Parc Taul\'{i}} in Sabadell (Catalunya)
+ \vspace{10pt}
+ \begin{description}\small
+ \item[276 images] acquired between 2010 and 2012.
+ \item[150 images] BI-RADS description.
+ \item[115 images] Multiple delineation of the lesion
+ \item[700 images] Complement the original dataset with 424 history images.
+% \item[16 images] subset selected for software development. 
+ \end{description}
+\end{column}
+\end{columns}
+
+		
+\end{frame}
+
+\begin{frame}\frametitle{Collected and catalogued  database}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[trim= 160 300 0 300, clip, height=5cm]{bbdd}
+\caption{ Pathology details for the 276 images dataset. The shadow represent the images forming the 115 subset. }
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Test resume}
+\begin{scriptsize}
+
+		\begin{table}
+
+
+\begin{tabular}{llccccccc}
+    
+   &  \multicolumn{2}{c}{Superpixel}  & \multirow{2}{1.5cm}{\vbox{Regular features}}& \multicolumn{3}{c}{Multi-resolution  feat. [1,2,3]} &\multirow{2}{1.5cm}{\vbox{Pairwise term}}\\ \cmidrule(r){2-3} \cmidrule(r){5-7}
+test    & \ac{qs} & \ac{gpb} &	&$\text{B}_{Md}$&$\text{B}_\mu$ & \ac{bof}+\ac{sift}& \\ \hline \hline
+\#1 & \ch 	& 			& \ch 	& \ch 	& \ch 	& 			&       	\\
+\#2 & \ch 	& 			& \ch 	& \ch 	& \ch 	&      	& \ch 	\\
+\#3 & \ch 	&      	& \ch 	&       	& \ch  	& \ch 	& 			\\
+\#4 & \ch 	& 			& \ch 	& 		 	& \ch  	& \ch  	& \ch 	\\
+\#5 & 		 	& \ch	& \ch 	& \ch 	& \ch 	& 			&       	\\
+\#6 & 		 	& \ch	& \ch 	& \ch 	& \ch 	&      	& \ch 	\\
+\#7 & 		 	& \ch  	& \ch 	&       	& \ch  	& \ch 	& 			\\
+\#8 & 		 	& \ch 	& \ch 	& 		 	& \ch  	& \ch  	& \ch 	\\
+             						
+\bottomrule
+\end{tabular}
+\caption{Configuration details of the experiments}
+\end{table}
+\end{scriptsize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Sampling pool}
+\begin{figure}[Htbp]
+\centering
+\setlength{\abovecaptionskip}{15pt}
+\subfloat{
+\begin{tikzpicture} [yscale=.3,xscale=.25]
+
+\draw (0,0) rectangle (16,9.8888);
+\draw [dashed] (0,2.5) -- (6,2.5);
+\draw [dashed] (16,2.5) -- (6,2.5);
+\draw (6,0)--(6,9.8888);
+
+% Draw the horizontal annotations
+\foreach \x in {0,6,16}
+\draw  (\x,10) -- ++(0,10pt);
+\foreach \x/\length in {0/6,6/10}
+\draw [<->,>=stealth'] (\x,10) ++(0,5pt) -- ++(\length,0);
+% Draw vertcical annotations
+\foreach \y in {0,2.5,9.8888} 
+\draw  (-0.1112,\y) -- ++(-10pt,0);
+\foreach \y/\length in {0/2.5,2.5/7.3888}
+\draw [<->,>=stealth'] (-0.1112,\y) ++(-5pt,0) -- ++(0,\length);
+
+\tikzset{sPixels/.style={inner sep=5pt,anchor= north east}}
+\begin{footnotesize}
+\draw 	(6,	9.8888)	node[sPixels]{$1997$}
+			(16,	9.8888)	node[sPixels]{$3406$}
+			(6,	2.5		)	node[sPixels]{$206$}
+			(16,	2.5		)	node[sPixels]{$293$};
+\end{footnotesize}			
+\begin{tiny}
+\draw	(2, 	1.25		)   node[draw,circle,inner sep=2pt]{$125$}
+			(2, 	6.2	)   	node[draw,circle,inner sep=2pt]{$125$}
+			(3, 10) ++(0,8pt)	node[anchor=south,inner sep=1pt]{6 train images}
+			(11, 10) ++(0,8pt)		node[anchor=south,inner sep=1pt]{10 test images}
+			(-10pt, 1.25)		node[anchor=east,inner sep=0pt]{lesion}
+			(-10pt, 6.2)		node[anchor=east,inner sep=0pt, align=left]{no- \\ lesion};			
+\end{tiny}			
+
+%\draw [|-|] (0,10) ++(0,1pt) -- ++(6,0);
+%\draw [|-|] (6,10) ++(0,1pt) -- ++(10,0);
+%\draw [|-|,shorten >=1pt,auto] (0,16) ++(1pt,0) -- ++(0,6);
+
+
+\end{tikzpicture}}~
+\subfloat{
+\begin{tikzpicture} [yscale=.3,xscale=.31]
+
+\draw (0,0) rectangle (16,9.8888);
+\draw [dashed] (0,2.5) -- (6,2.5);
+\draw [dashed] (16,2.5) -- (6,2.5);
+\draw (6,0)--(6,9.8888);
+
+% Draw the horizontal annotations
+\foreach \x in {0,6,16}
+\draw  (\x,10) -- ++(0,10pt);
+\foreach \x/\length in {0/6,6/10}
+\draw [<->,>=stealth'] (\x,10) ++(0,5pt) -- ++(\length,0);
+% Draw vertcical annotations
+\foreach \y in {0,2.5,9.8888} 
+\draw  (-0.1112,\y) -- ++(-10pt,0);
+\foreach \y/\length in {0/2.5,2.5/7.3888}
+\draw [<->,>=stealth'] (-0.1112,\y) ++(-5pt,0) -- ++(0,\length);
+
+\tikzset{sPixels/.style={inner sep=5pt,anchor= north east}}
+\begin{footnotesize}
+\draw 	(6,	9.8888)	node[sPixels]{$15538$}
+			(16,	9.8888)	node[sPixels]{$25308$}
+			(6,	2.5		)	node[sPixels]{$1073$}
+			(16,	2.5		)	node[sPixels]{$1494$};
+\end{footnotesize}			
+\begin{tiny}
+\draw	(2, 	1.25		)   node[draw,circle,inner sep=2pt]{$250$}
+			(2, 	6.2	)   	node[draw,circle,inner sep=2pt]{$250$}
+			(3, 10) ++(0,8pt)	node[anchor=south,inner sep=1pt]{6 train images}
+			(11, 10) ++(0,8pt)		node[anchor=south,inner sep=1pt]{10 test images}
+			(-10pt, 1.25)		node[anchor=east,inner sep=0pt]{lesion}
+			(-10pt, 6.2)		node[anchor=east,inner sep=0pt, align=left]{no- \\ lesion};
+\end{tiny}			
+
+\end{tikzpicture}
+}
+\caption{Randomized sampling for classifier training from the pool of superpixels. The values represent the amount of superpixels and the circle illustrate the random selection for a training round. Left: pool of \acf{qs} superpixels, and right: pool of \acf{gpb} superpixels.}
+\label{fig:crossVal}
+\end{figure}
+\end{frame}
+
+
+\subsection{Results}
+\begin{frame}\frametitle{Quantitative Results (AOV)}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[trim = 48 300 56 295, clip,height=.38\textwidth]{AOV}
+%\includegraphics[trim = 160 305 158 295, clip,width=.52\textwidth]{fp}~ 
+%\includegraphics[trim = 160 305 158 295, clip,width=.52\textwidth]{fn}
+\caption{Distribution of the dataset \acf{aov} mean where each sample correspond to a particular combination of the possible features reported in the experiment table.}
+\label{fig:quantResultsAOV}
+\end{figure}
+
+\vspace{-15pt}
+\centering
+{\tiny \scalefont{.9}
+\begin{tabular}{l|c|c|}
+\multicolumn{1}{c}{}&\multicolumn{2}{c}{Multiresolution} \\ \cmidrule{2-3}
+	& Appearance & App.+Texture \\ \hline
+QS	& $\nicefrac{\#1}{\#2^*}$ & $\nicefrac{\#3}{\#4^*}$ \\ \hline
+GPB & $\nicefrac{\#5}{\#6^*}$ & $\nicefrac{\#7}{\#8^*}$ \\ \hline
+\end{tabular}}
+\end{frame}
+
+\begin{frame}\frametitle{Quantitative Results (FP and FN)}
+\begin{figure}[Htbp]
+\centering
+%\includegraphics[trim = 48 307 56 295, clip,height=.38\textwidth]{AOV}
+\includegraphics[trim = 160 305 155 295, clip,width=.52\textwidth]{fp}~ 
+\includegraphics[trim = 160 305 158 295, clip,width=.52\textwidth]{fn}
+\caption{Distribution of dataset FP (left) and FN (right) mean rate where each sample correspond to a particular combination of the possible features reported in the experiment table. }
+\label{fig:quantResultsAOV}
+\end{figure}
+\vspace{-15pt}
+\centering
+{\tiny \scalefont{.9}
+\begin{tabular}{l|c|c|}
+\multicolumn{1}{c}{}&\multicolumn{2}{c}{Multiresolution} \\ \cmidrule{2-3}
+	& Appearance & App.+Texture \\ \hline
+QS	& $\nicefrac{\#1}{\#2^*}$ & $\nicefrac{\#3}{\#4^*}$ \\ \hline
+GPB & $\nicefrac{\#5}{\#6^*}$ & $\nicefrac{\#7}{\#8^*}$ \\ \hline
+\end{tabular}}
+\end{frame}
+
+
+\begin{frame}[plain]\frametitle{Results}
+\begin{figure}[Htbp]
+\centering
+%\subfloat[]{\input{chapters/method/figures/discresults.tex}}
+%\includegraphics[trim = 145 280 85 130, clip, height=.85\textheight]{roses/discResultsQStmp.pdf}
+\includegraphics[height=.85\textheight]{roses/discresultsQS.pdf}
+\caption{Average performance details of experiment \#4:\ac{qs} superpixel and pairwise term.}% where each angle represents a particular configuration. From inner to outer part: \acf{fp} rate (in red), \ac{aov} rate (in blue), active feature swatch (gray when active), \ac{fn} rate colored ring, and degree wheel for rapid referencing.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[plain]\frametitle{Results}
+\begin{figure}[Htbp]
+\centering
+%\subfloat[]{\input{chapters/method/figures/discresults.tex}}
+%\includegraphics[trim = 145 280 85 130, clip, height=.85\textheight]{roses/discResultsQStmp.pdf}
+\includegraphics[height=.85\textheight]{roses/discresultsGPB.pdf}
+% where each angle represents a particular configuration. From inner to outer part: \acf{fp} rate (in red), \ac{aov} rate (in blue), active feature swatch (gray when active), \ac{fn} rate colored ring, and degree wheel for rapid referencing.}
+\caption{Average performance details of experiment \#8: \ac{gpb} superpixel, superpixels and pairwise term. }
+\end{figure}
+\end{frame}
+
+
+%\begin{frame}\frametitle{Results}
+%\begin{figure}[Htbp]
+%\centering
+%%\subfloat[]{\input{chapters/method/figures/discresults.tex}}
+%\includegraphics[trim = 145 280 85 130, clip, height=.85\textheight]{discResultsGPB.pdf}
+%\caption[Experiment 8 detailed results.]{Experiment 8 detailed results where each angle represents a particular configuration. From inner to outer part: \acf{fp} rate (in red), \ac{aov} rate (in blue), active feature swatch (gray when active), \ac{fn} rate colored ring, and degree wheel for rapid referencing.}
+%\label{fig:discResultsGPBSIFT}
+%\end{figure}
+%\end{frame}
+%
+
+
+\begin{frame}\frametitle{Comparison with previously reviewed methodologies}
+\vspace{-5pt}
+\begin{figure}
+\tiny
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{tikzpicture}[scale=.58]
+\def\labels{	{\color{semiAuto}[68]},%\cite{AlemanFlores:2007p14310}},
+						{\color{semiAuto}[70]},%\cite{Gao:2012p14336}},
+						{\color{fullyAuto}[85]},%\cite{Liu:2010p14328}},
+						{\color{semiAuto}[69]},%\cite{Cui:2009p14325}},					
+						{\color{autoGuided}[75]},%\cite{Huang:2007p6100}},
+						{\color{fullyAuto}[80]},%\cite{Huang:2005p11636}},
+						{\color{semiAuto}[64]},%\cite{Gomez:2010p14339}},
+						{\color{semiAuto}[58]},%\cite{Horsch:2001p6028}},
+						{\color{fullyAuto}[86]},%\cite{Yeh:2009p11985}},
+						{\color{autoGuided}[79]},%\cite{Shan:2012p14347}},
+						{\color{autoGuided}[61]},%\cite{massich2010lesion}},
+						{\color{semiAuto}[66]},%\cite{Xiao:2002p5639,gerard2013}},
+						{\color{autoGuided}[76]},%\cite{Zhang:2010p14317}},
+						{\color{fullyAuto}[84]},%\cite{hao2012combining}},
+						{\color{autoGuided}[60]},%\cite{Madabhushi:2003p6036}},
+						{\color{fullyAuto}[81]}}%\cite{Huang:2012p14313}}}
+						
+\def\reward{88.3,86.3,88.1,74.5,77.6,78.6,85.0,73.0,73.3,83.1,64.0,54.9,84.0,75.0,62.0,85.2}
+\def\dbSize{32,20,76,488,118,20,50,400,6,120,25,352,347,480,42,20}
+\def\dbClass{1,1,2,3,2,1,2,3,1,2,1,3,3,3,1,1}		
+\def\cZoom{3} 
+\def\percentageLabelAngle{90}
+\def\nbeams{16}
+\pgfmathsetmacro\beamAngle{(360/\nbeams)}
+\pgfmathsetmacro\halfAngle{(180/\nbeams)}
+%\def\globalRotation{10}
+\pgfmathsetmacro\globalRotation{\halfAngle}
+
+% draw manual AOV results
+\filldraw[blue!15!white,even odd rule] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+\draw[thin,color=blue!50!white,dashed] (0,0) circle [radius={\cZoom*.852}] (0,0) circle [radius={\cZoom*.8}];
+
+%\foreach \x in {.125,.25, ...,1} { \draw[thin]  (0,0) circle [radius={2*\x}]; }
+% draw the radiants with the reference label
+\foreach \n  [count=\ni] in \labels
+{
+\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+\draw [thin] (0,0) -- (\cAngle:{\cZoom*1}) ;
+\draw	(\cAngle:{\cZoom*1.1})  node[fill=white, inner sep=0pt] {{\tiny \textbf  \n}}; %referencies
+}
+
+% draw the % rings 
+\foreach \x in {12.5,25, ...,100} 
+\draw [thin,color=gray!50] (0,0) circle [radius={\cZoom*\x/100}];
+
+\foreach \x in {50,75,100}
+{ 
+     \draw [thin,color=black!50] (0,0) circle [radius={\cZoom/100*\x}];
+     \foreach \a in {0, 180} \draw ({\percentageLabelAngle+\a}:{\cZoom*0.01*\x}) node  [inner sep=0pt,outer sep=0pt,fill=white,font=\fontsize{5}{5}\selectfont]{$\x$};
+}
+
+
+% draw the path of the percentages
+\def\aux{{\reward}}
+\pgfmathsetmacro\origin{\aux[\nbeams-1]} 
+\draw [blue, thick] (\globalRotation:{\cZoom*\origin/100}) \foreach \n  [count=\ni] in \reward { -- ({(\ni*(360/\nbeams))+\globalRotation}:{\cZoom*\n/100}) } ;
+
+% label all the percentags
+\foreach \n [count=\ni] in \dbSize 
+{
+	\pgfmathsetmacro\cAngle{{(\ni*(360/\nbeams))+\globalRotation}}
+	\pgfmathsetmacro\nreward{\aux[\ni-1]}
+	\draw (\cAngle:{\cZoom*1.4}) node[align=center] {{\color{blue}\nreward $\%$} \\ {\color{red}\n} };
+} ;
+
+% draw the database rose
+\def\dbScale{\9}
+\foreach \n [count=\ni] in \dbClass
+\filldraw[fill=red!20!white, draw=red!50!black]
+(0,0) -- ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\cZoom*\n/9}) arc ({\ni*(360/\nbeams)-\halfAngle+\globalRotation}:{\ni*(360/\nbeams)+\halfAngle+\globalRotation}:{\cZoom*\n/9}) -- cycle;
+\foreach \x in {1,2,3}
+\draw [thin,color=red!50!black,dashed] (0,0) circle [radius={\cZoom*\x/9}];
+
+%% draw the domain of each class 
+  \def\puta{	3/0/{ACM},
+  			3/3/{ACM+Other},
+  			3/6/{Other}}
+\def\putaa{  	2/9/{Other+ML},
+  			3/11/{ML},
+  			2/14/{ML+ACM}}
+
+\foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \puta
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.45pt}
+    	{\draw [decoration={text along path,  text={\name},text align={center}},decorate] (\finalAngle:\r) arc (\finalAngle:\initialAngle:\r);}
+  }
+  
+   \foreach \numElm/\contadorQueNoSeCalcular/\name [count=\ni] in \putaa
+ {
+
+ 	\pgfmathsetmacro\initialAngle{(\contadorQueNoSeCalcular*\beamAngle)+\halfAngle+\globalRotation}
+ 	\pgfmathsetmacro\finalAngle  {((\numElm+\contadorQueNoSeCalcular)*\beamAngle)+\halfAngle+\globalRotation}
+	\pgfmathsetmacro\l  {\cZoom*1.5+.3pt}
+	\draw (\initialAngle:{\cZoom*1.6}) -- (\initialAngle:{\cZoom*1.1});
+	\draw [ |<->|,>=latex] (\initialAngle:\l) arc (\initialAngle:\finalAngle:\l) ;    									 
+	\pgfmathsetmacro\r  {\cZoom*1.5+.7pt}
+    	{\draw [decoration={text along path, text={\name},text align={center}},decorate] (\initialAngle:\r) arc (\initialAngle:\finalAngle:\r);}    			 
+  }
+  
+    \draw [thick,color=black] (0,0) circle [radius={\cZoom*.63}];
+  
+    \node [anchor=north west] at (\cZoom*1.8,\cZoom*1.5){
+	\begin{tikzpicture}
+  \begin{customlegend}[legend entries={Dataset size categorization,Datset size,AOV results, Manual delineation AOV, AOV percentage,$62.3\%$ AOV}]
+    \addlegendimage{red,fill=red!20!white, draw=red!60!gray, ybar, ybar legend}
+    \addlegendimage{number in legend=XX,red}
+    \addlegendimage{red,draw=blue,thick,sharp plot}
+    \addlegendimage{red,fill=blue!15!white,draw=blue,dashed,area legend}
+    \addlegendimage{number in legend=XX.X\%,blue}
+    \addlegendimage{red,draw=black,thick,sharp plot}
+
+    \end{customlegend}
+\end{tikzpicture}}; 
+
+\end{tikzpicture}
+\caption{{\tiny Circular representation of the reported results grouped by methodology class. From inside to outside: used dataset categorization, AOV, work ID, numeric data and methodology category label. The work ID is colored as follows: semi-automatic {\color{semiAuto}\semiAutoColor}, auto-guided{\color{autoGuided}\autoGuidedColor}, and fully automatic{\color{fullyAuto}\fullyAutoColor}.}} 
+\end{figure}
+\end{frame}
+
+
+\begin{frame}\frametitle{Qualitative results}
+\begin{figure}[Htbp]
+\centering
+\includegraphics[width=.45\textwidth]{qualitativeResults/goodQSorigin}~
+\includegraphics[width=.45\textwidth]{qualitativeResults/goodQSseg}
+\caption[Qualitative result example from experiment 4.]{Qualitative result example from experiment 4. (a) Original image with \ac{gt} overlay in red and superpixels' boundaries overlay in black. (b) Segmentation obtained  using: Appearance model, Atlas, \ac{bow}+\ac{sift} multi-resolution (1,2,3) and mean Brightness multi-resolution (1,2,3) features. }
+\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Qualitative results}
+\vspace{-10pt}
+\begin{figure}[Htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\begin{tikzpicture}%[node distance=2cm]
+%       \node (a) {\includegraphics[width=.45\textwidth]{qualitativeResults/fporigin}};
+%%       \node [block, below of=a] (b) {B};
+%       \node [anchor=south west] (c) at ({.5\textwidth},0) {\includegraphics[width=.2\textwidth]{qualitativeResults/fpHom}};
+%       \node [anchor=north east] (d) at (a.north -| c.east) {\includegraphics[width=.2\textwidth]{qualitativeResults/fpnohom}};
+%       
+              \node [anchor=south west] (a) {\includegraphics[height=.75\textheight]{qualitativeResults/fporigin}};
+       \node [anchor =south west] (c) at ({.62\textwidth},0) {\includegraphics[height=.37\textheight]{qualitativeResults/fpHom}};
+        \node [anchor = north west] (d) at (a.north -| c.west) {\includegraphics[height=.37\textheight]{qualitativeResults/fpnohom}};
+     \end{tikzpicture}
+
+\caption{\scriptsize Qualitative results for the same example with and without applying the smoothing term. Left: original image. Top Right: system output without applying the smoothing term. Bottom right: system output once applied the smoothing term.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[plain]\frametitle{Qualitative results}
+\vspace{-5pt}
+\begin{figure}[Htbp]
+\setlength{\abovecaptionskip}{2pt}
+\centering
+\includegraphics[width=.35\textwidth]{qualitativeResults/FNGT}~ 
+\includegraphics[width=.35\textwidth]{qualitativeResults/FNsp}\\ \vspace{3pt}
+\includegraphics[width=.35\textwidth]{qualitativeResults/FNdetected}~ 
+\includegraphics[width=.35\textwidth]{qualitativeResults/FNmiss}
+\caption{\scalefont{.9} \acf{fn} illustration. Top left: original image with the \ac{gt} overlay in red. Top right: Original image with the super pixels' boundary overlay in red. Bottom: two system output examples using \ac{qs}.}
+\end{figure}
+\end{frame}
+
+
+
+

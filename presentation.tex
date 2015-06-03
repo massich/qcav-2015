@@ -20,6 +20,9 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\sign}{sign}
 
+%% Text packages
+\usepackage[nolist]{acronym}
+
 %% figure package
 \usepackage{epsf,graphicx}
 \usepackage{epstopdf}
@@ -50,8 +53,8 @@
 \usepackage{biblatex}
 \addbibresource{bibtex.bib}
 
-\title{\Large{A Boosting Approach for Prostate Cancer Detection using Multi-Parametric MRI}}
-\author{\scriptsize{Guillaume Lemaitre \\ \texttt{guillaume.lemaitre@u-bourgogne.fr}}}
+\title{\Large{Breast Ultrasound Image Segmentation: an optimization approach based on super-pixels and high-level descriptors}}
+\author{\scriptsize{Joan Massich\\ \texttt{joan.massich@u-bourgogne.fr}}}
 \date{\scriptsize{Quality Control by Artificial Vision \\ 4\textsuperscript{th} June 2015}}
 
 \institute{Universit\'e de Bourgogne} 
@@ -87,74 +90,68 @@
 
 \begin{document}
 
+\graphicspath{{images/generalFigures/}}
+
 % Show the title page
 \begin{frame}
   \titlepage
 \end{frame}
 
-% Show the table of contents
+% % Show the table of contents
+% \begin{frame}
+%   \tableofcontents[sectionstyle=show,subsectionstyle=show,subsubsectionstyle=hide]
+% \end{frame}
+
+\include{chapters/prelude}
+
 \begin{frame}
-  \tableofcontents[sectionstyle=show,subsectionstyle=show,subsubsectionstyle=hide]
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+    \begin{tikzpicture}
+      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+      \node [anchor=center] (cloud) at 
+        (0.5\paperwidth, 0.5\paperheight)
+        {\includegraphics[width=.95\paperwidth]{orange_mix.png}};
+    \end{tikzpicture}
+  \end{beamercolorbox}
+\end{frame}
+
+
+\begin{frame}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+    \begin{tikzpicture}
+      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+      \node [anchor=center] (cloud) at 
+        (0.5\paperwidth, 0.5\paperheight)
+        {\includegraphics[width=.95\paperwidth]{intro.png}};
+    \end{tikzpicture}
+  \end{beamercolorbox}
+\end{frame}
+
+
+\begin{frame}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+    \begin{tikzpicture}
+      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+      \node [anchor=center] (cloud) at 
+        (0.5\paperwidth, 0.5\paperheight)
+        {\includegraphics[width=.95\paperwidth]{method.png}};
+    \end{tikzpicture}
+  \end{beamercolorbox}
+\end{frame}
+
+\begin{frame}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+    \begin{tikzpicture}
+      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+      \node [anchor=center] (cloud) at 
+        (0.5\paperwidth, 0.5\paperheight)
+        {\includegraphics[width=.95\paperwidth]{results.png}};
+    \end{tikzpicture}
+  \end{beamercolorbox}
 \end{frame}
 
 \section{Introduction}
-
-\subsection{Motivations}
-
-\begin{frame}
-  \frametitle{Introduction}
-  \framesubtitle{Motivations}
-  \begin{block}{\small Statistics}
-    \begin{figure}%
-      \centering
-      \hspace*{\fill}%
-      \subfigure[][\tiny \# of cancer cases]{%
-        \label{fig:stat1a}%
-          \includegraphics[width=.45\textwidth]{./images/statistics/repartitionCancerIncidence.png}}%
-      \hfill%
-      \subfigure[][\tiny \# of cancer deaths]{%
-        \label{fig:stat1b}%
-          \includegraphics[width=.45\textwidth]{./images/statistics/repartitionCancerDeaths.png}}%
-        \hspace*{\fill}%
-      \label{fig:stat1}%
-    \end{figure}
-  \end{block}
-  \begin{block}<2->{\small Implications}\footnotesize
-    \begin{itemize}
-    \item<2-> 2\textsuperscript{nd} most frequently diagnosed men cancer
-    \item<3-> Accounting for $7.1\%$ of overall cancers diagnosed
-    \item<3-> Accounting for $3.4\%$ of overall cancers death
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\subsection{Screening}
-
-\begin{frame}
-  \frametitle{Introduction}
-  \framesubtitle{Screening}
-  \begin{block}<1->{\small PSA level}\footnotesize
-    $\rightarrow$ Checking for a higher-than-normal PSA level
-    \begin{itemize}
-    \item[\cross]<2-> Not reliable
-    \end{itemize}
-  \end{block}
-
-  \begin{block}<3->{\small ``Blind'' TRUS biopsy}\footnotesize
-    $\rightarrow$ Take several samples through biopsy at different prostate locations
-    \begin{itemize}
-    \item[\cross]<4-> Invasive procedure
-    \item[\cross]<5-> Lead to false positives \& negatives
-    \end{itemize}
-  \end{block}
-
-  \begin{block}<6->{\small Current trendy techniques: MRI}\footnotesize
-    \begin{itemize}\small
-    \item[\tick] Non-invasive technique
-    \item[\cross] Need further investigations regarding the potential of the different MRI modalities available
-    \end{itemize}
-  \end{block}
-\end{frame}
+\input{chapters/introduction/intro.tex}
 
 \subsection{MRI modalities}
 

@@ -1,0 +1,136 @@
+\documentclass{standalone} 
+\usepackage{tikz}
+\usepackage{bitset}
+\usepackage{pgfplots}
+\usepgfplotslibrary{external} 
+\usepackage{xifthen}
+\usepackage{amssymb, amsmath} 
+
+%%----- To generate stand onle tikz legends
+% argument #1: any options
+\newenvironment{customlegend}[1][]{%
+    \begingroup
+    % inits/clears the lists (which might be populated from previous
+    % axes):
+    \csname pgfplots@init@cleared@structures\endcsname
+    \pgfplotsset{#1}%
+}{%
+    % draws the legend:
+    \csname pgfplots@createlegend\endcsname
+    \endgroup
+}%
+% makes \addlegendimage available (typically only available within an
+% axis environment):
+\def\addlegendimage{\csname pgfplots@addlegendimage\endcsname}
+\pgfkeys{/pgfplots/number in legend/.style={%
+        /pgfplots/legend image code/.code={%
+            \node at (0.295,-0.0225){#1};
+        },%
+    },
+}
+%%---- end tikz legends
+
+
+\begin{document}
+
+
+\begin{tikzpicture}[scale=2.5]
+%\tikzexternalize
+
+% Draw the binary disc
+\def\numBits{10}
+\def\initialRadious{2.1}
+\def\sectorThickness{-.05}
+%\input{chapters/method/figures/resultsTex/binarydisc.tex}
+\input{./binarydisc.tex}
+%\input{resultsTex/binarydisc.tex}
+
+% Draw the AOV curve
+%\input{chapters/method/figures/resultsTex/aovData.tex}
+\input{./aovData.tex}
+%\input{resultsTex/aovData.tex}
+\def\numBits{11}
+\pgfmathsetmacro{\numSectors}{(2^\numBits)-1}
+\pgfmathsetmacro{\sectorSize}{360/\numSectors}
+
+\draw[thin, draw=blue!50!white] circle[radius={.5+1.8*\aovDataQSSIFTMRFmean}];
+\draw[thin, draw=blue!50!white] circle[radius={.5+1.8*\aovDataQSSIFTMRFmax}];
+\draw[thin, draw=blue] ({\sectorSize/2},\aovDataQSSIFTMRF[0])
+	\foreach \x [count=\n] in \aovDataQSSIFTMRF
+	{ -- ({(\n-1)*\sectorSize+(\sectorSize/2)}:{1.8*\x+.5}) };
+
+% Draw the Fasle Positive
+% Fp labels
+\foreach \x/\a [count=\n] in {1/345,3/15,6/15,12/15}
+{
+	\draw[very thin, draw=red!50!white] (0,0) circle [radius={\fpDataQSSIFTMRFlogScaleLabelsPos[\x]}];
+	\pgfmathsetmacro\fplabel{{\fpDataQSSIFTMRFlogScaleLabels[\x]}}
+\node at (\a+90:{\fpDataQSSIFTMRFlogScaleLabelsPos[\x]}) {\fplabel};
+\node at ({\a-90}:{\fpDataQSSIFTMRFlogScaleLabelsPos[\x]}) {\fplabel};
+}	
+
+% FPresults	
+\draw[very thin, draw=red] ({\sectorSize/2},\fpDataQSSIFTMRFlogScale[0])
+	\foreach \x [count=\n] in \fpDataQSSIFTMRFlogScale
+	{ -- ({(\n-1)*\sectorSize+(\sectorSize/2)}:{\x}) };
+
+%Draw the FN results
+\foreach \x [count=\n] in \fnDataQSSIFTMRF
+	{  
+	\pgfmathparse{\jetColorPalette[\x]};
+    \definecolor{currentColor}{rgb}{\pgfmathresult};
+    \ifthenelse{\NOT 0 = \x }{
+	\draw[color=currentColor,line width=1.2pt] ({(\n-1)*\sectorSize+(\sectorSize/2)}:2.16) -- ({(\n-1)*\sectorSize+(\sectorSize/2)}:2.3);}{}
+	};
+
+
+% Decoration 
+\def\radius{2.3cm}
+\def\onedegrad{2.4cm}
+\def\fivedegrad{2.45cm}
+\def\tendegrad{2.50cm}
+\def\labelrad{2.58cm}
+
+%Angles 
+  \draw[fill=black] (0,0) circle (.02mm); % center
+  \foreach \x in {0,...,359} \draw (\x:\onedegrad) -- (\x:\radius); % one degree lines
+  \foreach \x in {0,5,...,355}  \draw (\x:\fivedegrad) -- (\x:\radius); % 5 degree lines
+  % labels and longer lines at every 10 degrees
+  \foreach \x in {0,10,...,350}
+  {
+    \node[rotate=\x*-1] at (360-\x+90:\labelrad) {\x};
+    \draw (\x:\tendegrad) -- (\x:\radius);
+  };
+
+%
+
+
+ \node [anchor=south west,align=left] at (2.6,-2.58){MSB \\ 
+ \quad Appearance \\ 
+ \quad Atlas \\ 
+ \quad BoF+SIFT \\ 
+ \quad $\text{B}_\mu$ \\ 
+ \quad $\text{B}_{Md}$ \\ 
+ \quad BoF+SIFT  - MR1 \\ 
+ \quad BoF+SIFT  - MR2 \\ 
+ \quad BoF+SIFT  - MR3 \\ 
+ \quad $\text{B}_\mu$  - MR1 \\ 
+ \quad $\text{B}_\mu$  - MR2,3 \\ 
+ LSB};
+
+  \node [anchor=north west] at (2.6,2.58){
+	\begin{tikzpicture}
+  \begin{customlegend}[legend entries={Av. \#FP per image,AOV,Binary configuration code, FN rate}]
+    \addlegendimage{red,draw=red,thick,sharp plot}
+    \addlegendimage{red,draw=blue,thick,sharp plot}
+    \addlegendimage{red,fill=gray!20!white, draw=gray!60!gray, ybar, ybar legend}
+    \addlegendimage{red,fill=white,draw=black,area legend}
+
+    \end{customlegend}
+\end{tikzpicture}}; 
+
+
+	
+\end{tikzpicture}
+
+\end{document}
