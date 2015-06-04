@@ -22,6 +22,7 @@
 
 %% Text packages
 \usepackage[nolist]{acronym}
+\usepackage{scalefnt}
 
 %% figure package
 \usepackage{standalone}
@@ -109,7 +110,73 @@
 %   \tableofcontents[sectionstyle=show,subsectionstyle=show,subsubsectionstyle=hide]
 % \end{frame}
 
-\include{chapters/prelude}
+% \include{chapters/prelude}
+
+% \begin{frame}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+%     \begin{tikzpicture}
+%       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+%       \node [anchor=center] (cloud) at 
+%         (0.5\paperwidth, 0.5\paperheight)
+%         {\includegraphics[width=.95\paperwidth]{orange_mix.png}};
+%     \end{tikzpicture}
+%   \end{beamercolorbox}
+% \end{frame}
+
+
+% \begin{frame}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+%     \begin{tikzpicture}
+%       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+%       \node [anchor=center] (cloud) at 
+%         (0.5\paperwidth, 0.5\paperheight)
+%         {\includegraphics[width=.95\paperwidth]{intro.png}};
+%     \end{tikzpicture}
+%   \end{beamercolorbox}
+% \end{frame}
+
+
+% \begin{frame}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+%     \begin{tikzpicture}
+%       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+%       \node [anchor=center] (cloud) at 
+%         (0.5\paperwidth, 0.5\paperheight)
+%         {\includegraphics[width=.95\paperwidth]{method.png}};
+%     \end{tikzpicture}
+%   \end{beamercolorbox}
+% \end{frame}
+
+% \begin{frame}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+%     \begin{tikzpicture}
+%       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+%       \node [anchor=center] (cloud) at 
+%         (0.5\paperwidth, 0.5\paperheight)
+%         {\includegraphics[width=.95\paperwidth]{results.png}};
+%     \end{tikzpicture}
+%   \end{beamercolorbox}
+% \end{frame}
+
+% \section{Introduction}
+% \input{chapters/introduction/intro.tex}
+
+% \section{Optimization Based Segmentation}
+
+% \begin{frame}
+%   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
+%     \begin{tikzpicture}
+%       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
+%       \node [anchor=center] (cloud) at 
+%         (0.5\paperwidth, 0.5\paperheight)
+%         {\includegraphics[width=.95\paperwidth]{./images/word_cloud/method.png}};
+%     \end{tikzpicture}
+%   \end{beamercolorbox}
+% \end{frame}
+% \input{./chapters/method/method_short.tex}
+
+
+% \section{Discussions}
 
 \begin{frame}
   \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
@@ -117,364 +184,10 @@
       \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
       \node [anchor=center] (cloud) at 
         (0.5\paperwidth, 0.5\paperheight)
-        {\includegraphics[width=.95\paperwidth]{orange_mix.png}};
+        {\includegraphics[width=.95\paperwidth]{./images/word_cloud/results.png}};
     \end{tikzpicture}
   \end{beamercolorbox}
 \end{frame}
-
-
-\begin{frame}
-  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
-    \begin{tikzpicture}
-      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
-      \node [anchor=center] (cloud) at 
-        (0.5\paperwidth, 0.5\paperheight)
-        {\includegraphics[width=.95\paperwidth]{intro.png}};
-    \end{tikzpicture}
-  \end{beamercolorbox}
-\end{frame}
-
-
-\begin{frame}
-  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
-    \begin{tikzpicture}
-      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
-      \node [anchor=center] (cloud) at 
-        (0.5\paperwidth, 0.5\paperheight)
-        {\includegraphics[width=.95\paperwidth]{method.png}};
-    \end{tikzpicture}
-  \end{beamercolorbox}
-\end{frame}
-
-\begin{frame}
-  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
-    \begin{tikzpicture}
-      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
-      \node [anchor=center] (cloud) at 
-        (0.5\paperwidth, 0.5\paperheight)
-        {\includegraphics[width=.95\paperwidth]{results.png}};
-    \end{tikzpicture}
-  \end{beamercolorbox}
-\end{frame}
-
-\section{Introduction}
-%\input{chapters/introduction/intro.tex}
-
-\section{Optimization Based Segmentation}
-\begin{frame}
-  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{frametitle}
-    \begin{tikzpicture}
-      \fill[nicewhite, opacity=1] (0, 0) rectangle(1, 1);
-      \node [anchor=center] (cloud) at 
-        (0.5\paperwidth, 0.5\paperheight)
-        {\includegraphics[width=.95\paperwidth]{method.png}};
-    \end{tikzpicture}
-  \end{beamercolorbox}
-\end{frame}
-\input{./chapters/method/method_short.tex}
-% \subsection{MRI modalities}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Introduction}
-%   \framesubtitle{MRI modalities}
-%   \begin{block}{\small T$_2$W MRI}
-%     \begin{figure}%
-%       \centering
-%       \hspace*{\fill}%
-%       \subfigure[][\tiny Healthy]{%
-%         \label{fig:t2wh}%
-%         \includegraphics[width=.2\textwidth]{./images/mri/t2w/t2w_healthy.eps}}%
-%       \hfill%
-%       \subfigure[][\tiny CaP PZ]{%
-%         \label{fig:t2wcpz}%
-%         \includegraphics[width=.2\textwidth]{./images/mri/t2w/t2w_cancer_pz.eps}}%
-%       \hfill%
-%       \subfigure[][\tiny CaP CG]{%
-%         \label{fig:t2wccg}%
-%         \includegraphics[width=.2\textwidth]{./images/mri/t2w/t2w_cancer_cg.eps}}%
-%       \hspace*{\fill}%
-%       \label{fig:t2w}%
-%     \end{figure}
-%   \end{block}
-%   \begin{redblock}{\small Features for CaP}\footnotesize
-%     \begin{itemize}
-%     \item Low-SI
-%     \item Ill-defined shape
-%     \end{itemize}
-%   \end{redblock}
-% \end{frame}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Introduction}
-%   \framesubtitle{MRI modalities}
-%   \begin{block}{\small DCE MRI}
-%     \begin{figure}%
-%       \centering
-%       \includegraphics[width=.7\textwidth]{./images/mri/dce/dce_cancer_healthy_information.eps}
-%       \label{fig:dce}%
-%       \caption{{\color{green}Green}: healthy - {\color{red}Red}: CaP}
-%     \end{figure}
-%   \end{block}
-%   \begin{redblock}{\small Features for CaP}\footnotesize
-%     \begin{itemize}
-%     \item Faster wash-in, wash-out, time-to-peak enhancement
-%     \item Higher integral under the curve, max SI
-%     \end{itemize}
-%   \end{redblock}
-% \end{frame}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Introduction}
-%   \framesubtitle{MRI modalities}
-%   \begin{block}{\small DW MRI - ADC}
-%     \begin{figure}%
-%       \centering
-%       \hspace*{\fill}%
-%       \subfigure[][\tiny DW MRI]{%
-%         \label{fig:dw}%
-%         \includegraphics[width=.2\textwidth]{./images/mri/dwi/dwi_cancer.eps}}%
-%       \hfill%
-%       \subfigure[][\tiny ADC]{%
-%         \label{fig:adc}%
-%         \includegraphics[width=.2\textwidth]{./images/mri/dwi/adc_cancer.eps}}%
-%       \hspace*{\fill}%
-%       \label{fig:dwadc}%
-%     \end{figure}
-%   \end{block}
-%   \begin{redblock}{\small Features for CaP}\footnotesize
-%     \begin{itemize}
-%     \item DW MRI - Higher SI
-%     \item ADC - Low-SI
-%     \end{itemize}
-%   \end{redblock}
-% \end{frame}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Introduction}
-%   \framesubtitle{MRI modalities}
-%   \begin{block}{\small MRSI}
-%     \begin{figure}%
-%       \centering
-%       \hspace*{\fill}%
-%       \subfigure[][\tiny Healthy]{%
-%         \label{fig:mrsih}%
-%         \includegraphics[width=.45\textwidth]{./images/mri/mrsi/mrsi_healthy.eps}}%
-%       \hfill%
-%       \subfigure[][\tiny CaP]{%
-%         \label{fig:mrsic}%
-%         \includegraphics[width=.45\textwidth]{./images/mri/mrsi/mrsi_cancer.eps}}%
-%       \hspace*{\fill}%
-%       \label{fig:mrsi}%
-%     \end{figure}
-%   \end{block}
-%   \begin{redblock}{\small Features for CaP}\footnotesize
-%     \begin{itemize}
-%     \item Decrease of citrate and spermine
-%     \item Increase of choline
-%     \end{itemize}
-%   \end{redblock}
-% \end{frame}
-
-% \subsection{The MedIA evil}
-
-% \begin{frame}
-%   \frametitle{The Medical Imaging evil}
-%   \begin{block}<1->{\small The reasons of a nightmare}\footnotesize
-%     \begin{itemize}
-%     \item[$\rightarrow$] Multidisciplinary competences: medical doctors vs. computer scientists
-%     \end{itemize}
-%   \end{block}
-%   \begin{redblock}<2->{\small Some examples}\footnotesize
-%     \begin{itemize}
-%     \item Delay in the data acquisition
-%     \item Interest differences between the different core competences
-%     \item[$\rightarrow$] Lack of interest
-%     \end{itemize}
-%   \end{redblock}
-%   \begin{greenblock}<3->{\small The keystones needed}\footnotesize
-%     \begin{itemize}
-%     \item Common datasets
-%     \item Algorithms comparisons
-%     \item Full benchmarking
-%     \end{itemize}
-%   \end{greenblock}
-% \end{frame}
-
-% \section{I2CVB}
-
-% \subsection{Overview}
-
-% \begin{frame}
-%   \frametitle{Overview}
-%   \begin{block}{\includegraphics[height=.04\textheight]{./images/i2cvb/i2cvb.pdf}\ Platform}
-%     \begin{figure}
-%       \centering
-%       \includegraphics[width=.8\linewidth]{./images/i2cvb/website.pdf}
-%     \end{figure}
-%     \begin{itemize}
-%     \item Development of a web platform
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
-
-% \begin{frame}
-%   \frametitle{Manifesto}
-%   \begin{columns}
-%     \column{.5\textwidth}
-%       \begin{block}{\includegraphics[height=.04\textheight]{./images/i2cvb/i2cvb.pdf}\ Vision}
-%         \begin{figure}
-%           \centering
-%           \includegraphics[height=.15\textheight]{./images/i2cvb/research.pdf}
-%         \end{figure}
-%         \vskip-4ex
-%         \begin{itemize}\tiny
-%         \item Democratization of the ability to research
-%         \end{itemize}
-%         \vskip1ex
-%       \end{block}
-%       \begin{block}{\includegraphics[height=.04\textheight]{./images/i2cvb/i2cvb.pdf}\ Protagonists}
-%         \begin{figure}
-%           \centering
-%           \includegraphics[height=.15\textheight]{./images/i2cvb/shark.pdf}
-%         \end{figure}
-%         \vskip-4ex
-%         \begin{itemize}\tiny
-%         \item Research groups and individuals from all walks of life to shape a transparent community
-%         \end{itemize}
-%       \end{block}
-%     \column{.5\textwidth}
-%       \begin{block}{\includegraphics[height=.04\textheight]{./images/i2cvb/i2cvb.pdf}\ Mission}
-%         \begin{figure}
-%           \centering
-%           \includegraphics[height=.15\textheight]{./images/i2cvb/what.pdf}
-%         \end{figure}
-%         \vskip-4ex
-%         \begin{itemize}\tiny
-%         \item Open data; evaluation methods; comparison framework; reporting platform
-%         \end{itemize}
-%       \end{block}
-%       \begin{block}{\includegraphics[height=.04\textheight]{./images/i2cvb/i2cvb.pdf}\ Strategy}
-%         \begin{figure}
-%           \centering
-%           \includegraphics[height=.15\textheight]{./images/i2cvb/open.pdf}
-%         \end{figure}
-%         \vskip-4ex
-%         \begin{itemize}\tiny
-%         \item Transferring successful practises from Free Software and Quality Management
-%         \end{itemize}
-%         \vskip1ex
-%       \end{block}
-%   \end{columns}
-% \end{frame}
-
-% \subsection{Prostate dataset}
-
-% \begin{frame}
-%   \frametitle{I2CVB}
-%   \framesubtitle{Prostate dataset}
-%   \begin{block}{\small Multi-parametric MRI}\footnotesize
-%     \begin{itemize}
-%     \item Cohort of 20 patients
-%     \item T$_2$W MRI, DCE MRI \& ADC
-%     \item 3 Tesla whole body MRI without endorectal coil
-%     \end{itemize}
-%   \end{block}
-%   \begin{greenblock}{\small Ground-truth}\footnotesize
-%     \begin{itemize}
-%     \item Delineations: prostate - zones - CaP
-%     \item Healthy: 2 \textit{vs.} CaP: \{PZ: 13, CG: 3, PZ + CG: 2 \}
-%     \end{itemize}
-%   \end{greenblock}
-% \end{frame}
-
-% \section{Classification framework}
-
-% \begin{frame}
-%   \frametitle{Classification framework}
-%   \begin{block}{\small Pre-processing}\footnotesize
-%     \begin{itemize}
-%     \item Resampling data to T$_2$W MRI dataset
-%     \item Balancing data using random sampling without replacement
-%     \item[$\rightarrow$] 218,423 voxels
-%     \end{itemize}
-%   \end{block}
-%   \begin{block}{\small Features extraction}\footnotesize
-%     \begin{itemize}
-%     \item Voxel-based ``$V(\cdot)$'': intensities of T$_2$W~MRI, ADC, DCE~MRI \& zonal information (PZ \textit{vs.} CG)
-%     \item 3D-texton-based ``$T(\cdot)$'': ($9 \times 9 \times 3$) intensities of T$_2$W~MRI, ADC, DCE~MRI \& zonal information (PZ \textit{vs.} CG)
-%     \end{itemize}
-%   \end{block}
-%   \begin{block}{\small Features classification}\footnotesize
-%     \begin{itemize}
-%     \item[$\rightarrow$] Gradient Boosted Trees classifier
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
-
-% \section{Results}
-
-% \subsection{Sensitivity \& specificity}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Results}
-%   \begin{block}{\small Sensitivity \& Specificity}\footnotesize
-%     \input{./images/results/figures.tex}
-%   \end{block}
-% \end{frame}
-
-% \subsection{ROC curves}
-
-% \setcounter{subfigure}{0}% Reset subfigure counter
-
-% \begin{frame}
-%   \frametitle{Results}
-%   \begin{block}{\small ROC curves}\footnotesize
-%         \begin{figure}%
-%       \centering
-%       \hspace*{\fill}%
-%       \subfigure[][\tiny Voxel-based]{%
-%         \label{fig:rocv}%
-%         \includegraphics[width=.45\textwidth]{./images/results/voxel-roc.eps}}%
-%       \hfill%
-%       \subfigure[][\tiny 3D-texton-based]{%
-%         \label{fig:roct}%
-%         \includegraphics[width=.45\textwidth]{./images/results/texton-roc.eps}}%
-%       \hspace*{\fill}%
-%       \label{fig:roc}%
-%     \end{figure}
-%   \end{block}
-% \end{frame}
-
-% \subsection{Conclusion}
-
-% \begin{frame}
-%   \frametitle{Conclusion}
-%   \begin{greenblock}{\small Discussions}\footnotesize
-%     \begin{itemize}
-%     \item DCE~MRI is the most disciminative feature
-%     \item Combinations of all the modalities lead to better performance
-%     \item 3D-texton and neighbourhood information significantly improve the performace
-%     \end{itemize}
-%   \end{greenblock}
-%   \begin{redblock}{\small Future works}\footnotesize
-%     \begin{itemize}
-%     \item Normalisation of the data in a patient-based fashion
-%     \item Use more complex features
-%     \item Perform LOPO cross-validation
-%     \item Perform a full benchmark study of the current methods!!!!
-%     \end{itemize}
-%   \end{redblock}
-% \end{frame}
-
+\input{./chapters/method/results.tex}
 
 \end{document}

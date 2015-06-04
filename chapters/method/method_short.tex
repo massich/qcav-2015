@@ -151,3 +151,110 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
   \end{itemize}
 \end{block}
 }
+
+
+\frame{\frametitle{The Metric Labeling Problem}%\framesubtitle{\insertsubsection}
+  \framesubtitle{Conceptual schema}
+  \begin{tikzpicture}
+    %[every node/.style={draw,line width=2pt,inner sep=0,outer sep=0}]
+    \draw node  () {
+        \begin{adjustbox}
+          {max size={.95\textwidth}{.95\textheight},keepaspectratio=true}
+          \input{./content/breast/framework.tex}
+        \end{adjustbox}
+      }(0,0);
+  \end{tikzpicture}
+  \begin{block}{$D_s(\omega_s = l)$ Interpretation}\footnotesize
+
+  \begin{figure}%
+     \centering
+     \hspace*{\fill}%
+     \subfigure[][\tiny $l$ is fat]{%
+       \label{fig:dataTermb}%
+     \includegraphics[height=2cm]{b.png}}
+     \hfill%
+     \subfigure[][\tiny $l$ is lungs]{%
+       \label{fig:dataTermc}%
+     \includegraphics[height=2cm]{c.png}}
+       \hspace*{\fill}%
+     \subfigure[][\tiny $l$ is lesion]{%
+       \label{fig:dataTermd}%
+     \includegraphics[height=2cm]{d.png}}
+       \hspace*{\fill}%
+    \label{fig:dataTerm}%
+  \end{figure}
+\end{block}
+}
+
+\frame{\frametitle{The Metric Labeling Problem}%\framesubtitle{\insertsubsection}
+  \framesubtitle{Conceptual schema}
+  \begin{tikzpicture}
+    %[every node/.style={draw,line width=2pt,inner sep=0,outer sep=0}]
+    \draw node  () {
+        \begin{adjustbox}
+          {max size={.95\textwidth}{.95\textheight},keepaspectratio=true}
+          \input{./content/breast/framework.tex}
+        \end{adjustbox}
+      }(0,0);
+  \end{tikzpicture}
+  \begin{block}{$V_{s,r}(\omega_s,\omega_r)$ Interpretation}\footnotesize
+
+  \begin{figure}%
+     \centering
+     \hspace*{\fill}%
+     \subfigure[]{%
+       \label{fig:smoothTermb}%
+     \includegraphics[height=2cm]{e.png}}
+     \hfill%
+     \subfigure[]{%
+       \label{fig:smoothTermc}%
+     \includegraphics[height=2cm]{f.png}}
+       \hspace*{\fill}%
+     \subfigure[]{%
+       \label{fig:smoothTermd}%
+     \includegraphics[height=2cm]{g.png}}
+       \hspace*{\fill}%
+    \label{fig:smoothTerm}%
+  \end{figure}
+\end{block}
+}
+
+\begin{frame}\frametitle{Interpretation of the Minimization Stage}
+\setbeamercovered{transparent}
+\begin{figure}
+\center
+	\begin{tikzpicture}[scale=1.63]%[y=0.080pt, x=0.08pt,yscale=1, inner sep=0pt, outer sep=0pt]
+	\fill 		(1.2,1.835) circle[fill=red,radius=1.2pt];
+	\draw[dashed] (.1,1.835) -- (1.2,1.835) (1.2,0) -- (1.2,1.835);
+	\node[anchor=south west,inner sep=0] at (0,0) {\includegraphics[height=5cm]{SApathLong}};
+
+	\def\xYellow{.4}
+	\def\xBlue{3.5}
+	\def\xTrueSeg{1.95}
+	\def\xDataSeg{2.79}
+	\def\yIcon{-.05}
+ 	\node[anchor=north,inner sep=0] at (\xYellow,\yIcon) {\includegraphics[height=.8cm]{yellow}};
+  \node[anchor=north,inner sep=0] at (\xTrueSeg,\yIcon) {\includegraphics[height=.8cm]{trueSeg}};
+ 	\node[anchor=north,inner sep=0] at (\xBlue,\yIcon) {\includegraphics[height=.8cm]{blue}};	
+ 	\node[anchor=north,inner sep=0] at (\xDataSeg,\yIcon) {\includegraphics[height=.8cm]{Dataseg}};	  
+	
+	\foreach \x/\ini/\th/\y in {\xYellow/0.08/0.13/2.8, \xBlue/0.1/0.13/2.95, \xTrueSeg/0.085/.5/1.01, \xDataSeg/0.085/1.9/2.152}
+	{\draw (\x,0) -- (\x,.06); \draw[blue, -|] (\x,\ini) -- (\x,\th); \draw[red, -o] (\x,\th) -- (\x,\y);}
+	
+
+	\begin{tiny}
+		\draw
+			   (0,1.835)node[anchor=east]{$U(\omega)$}
+			   (1.2,0) node[anchor=north] {$\omega$}
+		;
+	\end{tiny}	
+						
+	\begin{scriptsize}
+		\draw (0,3) node[anchor=east] {$U(\cdot)$}
+			   (3.8,0.2) node[anchor=north west] {$\mathcal{W}$}
+	   	;
+	\end{scriptsize}
+	\end{tikzpicture}
+	\end{figure}
+\end{frame}
+
