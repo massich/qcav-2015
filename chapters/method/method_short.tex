@@ -132,17 +132,22 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
         \end{adjustbox}
       }(0,0);
   \end{tikzpicture}
-  \begin{block}
+  \begin{block}{$U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V_{s,r}(\omega_s,\omega_r)$}\footnotesize
     \begin{itemize}
       \item $D_s(\omega_s=l_\cmark) << D_s(\omega_s=l_\xmark)$
+      \item  \tikz[baseline,inner sep=0] \node[inner sep=0, anchor=base, xshift=-5pt] 
+          {
+       \begin{minipage}[t!]{0.5\textwidth}
+            \[
+            V_{s,r}(\omega_s,\omega_r) = 
+            \begin{cases}
+              \beta, & \text{if } \omega_s \ne \omega_r\\
+              0,              & \text{otherwise}
+            \end{cases}
+        \]
+      \end{minipage}
+      };
       \item $|\mathcal{W}|=|\mathcal{L}|^{|\mathcal{S}|}$
-        % \begin{equation}
-        % V_{s,r}(\omega_s,\omega_r) = 
-        % \begin{cases}
-        % \beta, & \text{if } \omega_s \ne \omega_r\\
-        % 0,              & \text{otherwise}
-        % \end{cases}
-        % \end{equation}
-    \end{itemize}
-  \end{bloc}
+  \end{itemize}
+\end{block}
 }
