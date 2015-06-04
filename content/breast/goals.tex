@@ -1,0 +1,34 @@
+
+\graphicspath{{./content/breast/figures/}}
+
+\begin{frame}\frametitle{Goals}
+  \begin{figure}
+  \begin{adjustbox}
+    {max size={.95\textwidth}{.33\textheight},keepaspectratio=true}
+    \begin{tabular}[t]{cc}
+      \includegraphics[trim=30 130 50 20,clip,height=.40\textheight,width=.45\textwidth]{a110105_094.png} &
+      \includegraphics[trim=20 75 30 10,clip,height=.40\textheight,width=.45\textwidth]{segment.png}\\
+      \includegraphics[trim=50 60 15 0,clip,width=.45\textwidth]{000023.png} &
+      \includegraphics[trim=50 60 15 0,clip,width=.45\textwidth]{000023_gt.png}
+    \end{tabular}%
+  \end{adjustbox}
+  \caption{Lestion and tissue delineation}
+\end{figure}
+\end{frame}
+
+
+\frame{\frametitle{Breast \ac{us} tissue labeling}%\framesubtitle{\insertsubsection}
+
+  \begin{figure}
+    \begin{tikzpicture}
+      %[every node/.style={draw,line width=2pt,inner sep=0,outer sep=0}]
+      \draw node  () {
+        \begin{adjustbox}
+          {max size={.95\textwidth}{.95\textheight},keepaspectratio=true}
+          \input{./content/breast/framework.tex}
+        \end{adjustbox}
+      }(0,0);
+    \end{tikzpicture}
+    \caption{Strategy used for segmenting breast tissues and lesions in \ac{us} data.}
+  \end{figure}
+}
