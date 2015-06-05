@@ -1,4 +1,5 @@
 \graphicspath{{chapters/method/figures/}}
+\subsection{dummy_subsection_a}
 
 \begin{frame}\frametitle{Optimization}
 \framesubtitle{For image segmentation}
@@ -120,6 +121,7 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
 \end{columns}
 \end{frame}
 
+\subsection{dummy_subsection_b}
 
 \frame{\frametitle{The Metric Labeling Problem}%\framesubtitle{\insertsubsection}
   \framesubtitle{Conceptual schema}
@@ -154,7 +156,7 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
 
 
 \frame{\frametitle{The Metric Labeling Problem}%\framesubtitle{\insertsubsection}
-  \framesubtitle{Conceptual schema}
+  \framesubtitle{Conceptual scheme}
   \begin{tikzpicture}
     %[every node/.style={draw,line width=2pt,inner sep=0,outer sep=0}]
     \draw node  () {
@@ -186,6 +188,7 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
 \end{block}
 }
 
+\subsection{dummy_subsection_c}
 \frame{\frametitle{The Metric Labeling Problem}%\framesubtitle{\insertsubsection}
   \framesubtitle{Conceptual schema}
   \begin{tikzpicture}
@@ -219,6 +222,7 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
 \end{block}
 }
 
+\subsection{dummy_subsection_d}
 \begin{frame}\frametitle{Interpretation of the Minimization Stage}
 \setbeamercovered{transparent}
 \begin{figure}
@@ -258,3 +262,30 @@ U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V
 	\end{figure}
 \end{frame}
 
+
+\subsection{dummy_subsection_d}
+\frame{\frametitle{Take Away}%\framesubtitle{\insertsubsection}
+  \begin{tikzpicture}
+    %[every node/.style={draw,line width=2pt,inner sep=0,outer sep=0}]
+    \draw node  () {
+        \begin{adjustbox}
+          {max size={.95\textwidth}{.95\textheight},keepaspectratio=true}
+          \input{./content/breast/framework.tex}
+        \end{adjustbox}
+      }(0,0);
+  \end{tikzpicture}
+  \begin{block}{$V_{s,r}(\omega_s,\omega_r)$ Interpretation}\footnotesize
+
+
+\begin{equation*}
+\hat{\omega} = \arg \min_{\substack{\omega}} \,U(\omega)
+\end{equation*} 
+
+
+
+\begin{equation*}
+U(\omega) = \sum_{s\in S} D_s(\omega_s) + \sum_{s}\sum_{r \in \mathcal{N}_{s}} V_{s,r}(\omega_s,\omega_r)
+\end{equation*} 
+
+\end{block}
+}
